@@ -19,4 +19,8 @@ static/
 media/
 **.json
 **/fixtures/
-**/staticfiles/fontawesomefree/
+**/staticfiles/fontawesomefree/css/
+**/staticfiles/fontawesomefree/js/
+**/staticfiles/fontawesomefree/js-packages/
+**/staticfiles/fontawesomefree/less/
+**/staticfiles/fontawesomefree/otfs/
