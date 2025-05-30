@@ -19,4 +19,3 @@ static/
 media/
 **.json
 **/fixtures/
-**/staticfiles/fontawesomefree/js-packages/
