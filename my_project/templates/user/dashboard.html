@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <div id="pform">
+            <div id="l1">
+                <a href="{% url 'post:mpost' %}" class="btn">My Posts</a>
+            </div>
+            {% comment %} <div id="l2">
+                <a href="{% url 'post:fpost' %}" class="btn">Friends Posts</a>
+            </div> {% endcomment %}
+            <div id="l3">
+                <a href="{% url 'post:apost' %}" class="btn">All Posts</a>
+            </div>
+            <div id="l4">
+                <a href="{% url 'post:cpost' %}" class="btn">Create a Post</a>
+            </div>
+    </div>
+    <div style="border: 1px solid blue; width: 10%;background: blue;color: white;font-size: 30px;position: absolute;left: 80%;top: 5%;text-align:center;">
+        {{ user.username }}
+        <form action="{% url 'user:logout' %}" method="post">                        
+            {% csrf_token %}
+            <button id="lbtn" type="submit">Log Out</button>
+        </form>
+    </div>
+{% else%}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock %}

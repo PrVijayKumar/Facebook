@@ -1,0 +1,59 @@
+
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% comment %}
+
+HTML File for entering new password
+
+{% endcomment %}
+<div class="f_header mt-2">
+    <div class="float-left">
+        <svg height="40px" xmlns="http://www.w3.org/2000/svg">
+            <image height="40" href="{% static 'user/images/fbimg.svg' %}" />
+        </svg>
+    </div>
+</div>
+<div style="background-color: #e8eaee; margin-top: 5px; padding-top: 30px; padding-bottom: 30px;">
+    <div class="card w-50 mx-auto mt-2">
+      <div class="card-header">
+        Choose a new password
+      </div>
+      <div class="card-body">
+        <div>
+            {% if error %}
+            <div style="background:#feeae8; color: white; border: 1px solid #f3aa9e;color:black; font-size:20px;" id="emsg">{{error}}</div>
+            {% endif %}
+        </div>
+        <h5 class="card-title">Create a new password that is atleast 6 characters long. A<br>strong password has a combination of letters, digits and<br>punctuation marks.</h5>
+        
+        <form method="post">
+            {% csrf_token %}
+            {% comment %}
+            <div class="form-group">
+                <input type="text" name="password" class="form-control w-75" placeholder="New password">
+            </div>
+            {% endcomment %}
+            {{ form|crispy }}
+      </div>
+      <div class="card-footer"  style="text-align:right">
+            <a href="{% url 'user:login-page' %}" class="btn" style="background-color: #e5e7eb; color:black;">Skip</a>
+            <input class="btn btn-primary" type="submit" name="submit" value="Continue">
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+<script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="submit">
+    </form>
+    <div style="border: 1px solid blue; width: 10%;background: blue;color: white;font-size: 30px;position: absolute;left: 80%;top: 5%;text-align:center;">
+        {{ user.username }}
+        <form action="{% url 'user:logout' %}" method="post">                        
+            {% csrf_token %}
+            <button id="lbtn" type="submit">Log Out</button>
+        </form>
+    </div>
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock %}

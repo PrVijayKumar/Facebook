@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+<div class="f_header mt-2">
+    <div class="float-left">
+        <svg height="40px" xmlns="http://www.w3.org/2000/svg">
+            <image height="40" href="{% static 'user/images/fbimg.svg' %}" />
+        </svg>
+    </div>
+    <div class="float-right">
+        <form method="post" class="form-inline">
+            {% csrf_token %}
+            <div class="form-group ml-1">
+            <input type="text" class="form-control" name="username" autocapitalize="none" autocomplete="username" maxlength="254" required="" id="id_username">
+        </div>
+        <div class="form-group ml-1">
+            <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
+        </div>
+        <div class="form-group ml-1">
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </div>
+            <a id="fp" href="{% url 'user:forgotpass' %}"> Forgotten Password? </a>
+        </form>
+    </div>
+</div>
+<div style="background-color: #e8eaee; margin-top: 5px; padding-top: 30px; padding-bottom: 30px;">
+    <div class="card w-50 mx-auto mt-2">
+      <div class="card-header">
+        Find Your Account
+      </div>
+      <div class="card-body">
+        <div>
+            {% if error %}
+            <div style="background:#feeae8; color: white; border: 1px solid #f3aa9e;color:black; font-size:20px;" id="emsg">{{error}}</div>
+            {% endif %}
+        </div>
+        <h5 class="card-title">Please enter your email address or mobile number to search for your account.</h5>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="email" class="form-control w-75" placeholder="Email address or mobile number">
+            </div>
+      </div>
+      <div class="card-footer"  style="text-align:right">
+            <a href="{% url 'user:login-page' %}" class="btn" style="background-color: #e5e7eb; color:black;">Cancel</a>
+            <input class="btn btn-primary" type="submit" name="submit" value="search">
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+<script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

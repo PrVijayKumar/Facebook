@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+        <title> {{ title }}</title>
+        {% else %}
+        <title> Facebook </title>
+        {% endif %}  
+        <!--
+      Link tags cause URI malformed error   -->
+        <link href="{% static 'css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/solid.css' %}" rel="stylesheet" type="text/css"> 
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.css' %}" >
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.less' %}" >
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.scss' %}" >
+
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="mymsgs" style="font-size:40px; color: white; font-weight: bold; background:red;">
+        </div>
+
+        <div>
+            {% if messages %} {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div style="background:red; color: white; text-align: center;" id="nmsg"><h1>{{message}}</h1></div>
+            {% else %}
+            <div style="background:green; color: white;" id="nmsg"><h1>{{message}}</h1></div>
+            {% endif %}
+            {% endfor %} {% endif %}
+            {% block content %}
+            {% endblock %}
+            
+            <!-- Large modal -->
+
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Share</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span id="scirc" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <b>{{ request.user.first_name }} {{ request.user.last_name }}</b><br>
+                        <button class="btn btn-sm btn-secondary">Feed</button>
+                        <button class="btn btn-sm btn-secondary"><i class="fas fa-users"></i>Friends</button><br><br>
+                        <textarea class="form-control" rows="2" placeholder="Say something about this..."></textarea>
+                        <br>
+                        <button class="btn btn-primary" style="float:right;">Share Now</button>
+                      </div>
+                      <div class="modal-footer">
+                        <div class="w-100">
+                            <strong>Send in Messenger</strong>
+                            <strong>Share to</strong><br><br>
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-facebook-messenger"></i><br>Messenger</button>
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-whatsapp"></i><br>WhatsApp</button>
+                            <button type="button" class="btn btn-secondary"><i class="fa-solid fa-link"></i><br>Copy link</button>
+                            <button type="button" class="btn btn-secondary"><i class="fas fa-users"></i><br>Group</button>
+                            {% comment %} <button type="button" class="btn btn-secondary"><img src="{% static 'user/images/x-twitter-brands.svg' %}"><br>Group</button> {% endcomment %}
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-x-twitter"></i><br>X</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        
+
+        <script src="{% static 'js/all.min.js' %}"></script>
+        <script src="{% static 'js/fontawesome.js' %}"></script>
+        <script src="{% static 'js/solid.js' %}"></script>
+        <script src="{% static 'js/brands.js' %}"></script>
+        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+        {% comment %} <script src="{% static 'js/jquery.slim.min.js' %}"></script> {% endcomment %}
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        {% block javas %}
+        {% endblock %}
+    </body>
+</html>

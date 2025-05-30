@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+<div id="limg">
+    <img src="{% static 'user/images/fbimg.svg' %}">
+    <p id="lp">Facebook helps you connect and<br>share with the people in your life.</p
+</div>
+<div id="lform">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <div class="form-group">
+        <button class="btn btn-primary btn-lg btn-block" id="libtn" type="submit">Log In</button>
+        </div>
+        <br>
+        <a id="fp" href="{% url 'user:forgotpass' %}"> Forgotten Password</a>
+    </form>
+    <hr>
+    <!-- Sign Up form -->
+    <div class="">
+        <a  class="btn btn-success btn-lg btn-block" id="sbtn" href="{% url 'user:register' %}">Create new account</a>
+    </div>
+    <!-- Social Accounts --> 
+    <div id="social_acc">
+        <br>
+        <a class="btn btn-block btn-social btn-google text-center" href="{% url 'social:begin' 'google-oauth2' %}">
+            <img src="{% static 'user/images/branding_guideline_sample_lt_sq_sl.svg' %}" alt="my image"/>Sign in with Google
+        </a>
+        <p class="text-center"><strong>-- OR --</strong></p>
+            <a class="btn btn-block btn-social btn-facebook text-center" href="{% url 'social:begin' 'facebook' %}">
+                Login with Facebook<img src="{% static 'user/images/Facebook_Logo_Primary.png' %}"/>
+            </a>
+        <p class="text-center"><strong>-- OR --</strong></p>
+            <a class="btn btn-block btn-social btn-github text-center" href="{% url 'social:begin' 'github' %}">
+                Login with GitHub<img src="{% static 'user/images/github-mark-white.svg' %}"/>
+            </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+<script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

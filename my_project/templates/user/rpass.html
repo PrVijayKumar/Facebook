@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+<div class="f_header mt-2">
+    <div class="float-left">
+        <svg height="40px" xmlns="http://www.w3.org/2000/svg">
+            <image height="40" href="{% static 'user/images/fbimg.svg' %}" />
+        </svg>
+    </div>
+    <div class="float-right">
+        <form method="post" class="form-inline">
+            {% csrf_token %}
+            <div class="form-group ml-1">
+            <input type="text" class="form-control" name="username" autocapitalize="none" autocomplete="username" maxlength="254" required="" id="id_username">
+        </div>
+        <div class="form-group ml-1">
+            <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
+        </div>
+        <div class="form-group ml-1">
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </div>
+            <a id="fp" href="{% url 'user:forgotpass' %}"> Forgotten Password? </a>
+        </form>
+    </div>
+</div>
+<div style="background-color: #e8eaee; margin-top: 5px; padding-top: 30px; padding-bottom: 30px;">
+    <div class="card w-50 mx-auto mt-2">
+      <div class="card-header">
+        Reset Your Password
+      </div>
+      <div class="card-body">
+        <div id="b1" class="float-left w-50">
+            <h5 class="card-title">How do you want to receive the code to reset your password?</h5>
+            <form method="post" action="{% url 'user:rcode' id %}">
+                {% csrf_token %}
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="ropt" value="1" id="opt1">
+              <label class="form-check-label" for="opt1">
+                Send code via Facebook notification<br>
+                <span style="font-size:15px; line-height:0.2;">You're logged in on another app<br> or device. Get a notification with a login<br> code.</span>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="ropt" id="opt2" value="2" checked>
+              <label class="form-check-label" for="opt2">
+                Send code via SMS<br>
+                <span style="font-size:15px;">{{value}}</span>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="ropt" id="opt3" value="3">
+              <label class="form-check-label" for="opt3">
+                Enter Password to Log In
+              </label>
+            </div>
+        </div>
+        <div id="b2" class="float-right w-25 pt-1" style="border:1px solid red; height:150px;text-align:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" height="90" width="108" viewBox="0 0 448 512">
+                <circle r="310" cx="225" cy="300" fill="#d3d7db" />
+                <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464l349.5 0c-8.9-63.3-63.3-112-129-112l-91.4 0c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3z"/>
+                <span style="text-align:center;">{{value}}<br>
+                Facebook User</span>
+            </svg>
+            <!-- <i class="fa-regular fa-user"></i> -->
+        </div>
+      </div>
+      <div class="card-footer"  style="text-align:right">
+            <a href="{% url 'user:login-page' %}" class="btn" style="background-color: #e5e7eb; color:black;">Cancel</a>
+            <input class="btn btn-primary" type="submit" name="submit" value="search">
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+<script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

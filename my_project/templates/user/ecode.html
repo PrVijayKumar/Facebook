@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+<div class="f_header mt-2">
+    <div class="float-left">
+        <svg height="40px" xmlns="http://www.w3.org/2000/svg">
+            <image height="40" href="{% static 'user/images/fbimg.svg' %}" />
+        </svg>
+    </div>
+</div>
+<div style="background-color: #e8eaee; margin-top: 5px; padding-top: 30px; padding-bottom: 30px;">
+    <div class="card w-50 mx-auto mt-2">
+      <div class="card-header">
+        Enter security code
+      </div>
+      <div class="card-body">
+        <div>
+            {% if error %}
+            <div style="background:#feeae8; color: white; border: 1px solid #f3aa9e;color:black; font-size:20px;" id="emsg">{{error}}</div>
+            {% endif %}
+        </div>
+        <h5 class="card-title">Please check your phone for an email message with your code. Your code is 8 characters in length.</h5>
+        <form method="post" action="{% url 'user:vcode' id%}">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="rcode" class="form-control w-50" placeholder="Enter Code">
+            </div>
+      </div>
+      <div class="card-footer">
+        <div class="float-left w-25">
+            <a href="{% url 'user:login-page' %}">Didn't get a code?</a>
+        </div>
+        <div class="float-right w-75">
+            <a href="{% url 'user:login-page' %}" class="btn" style="background-color: #e5e7eb; color:black;">Cancel</a>
+            <input class="btn btn-primary" type="submit" name="submit" value="submit">
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+<script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

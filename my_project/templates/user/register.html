@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<img src="{% static 'user/images/fblogo.svg' %}" height="100px" id="img1">
+<div class="box">
+    <div class="signup">
+        <div id="s1">Create a new account</div>
+        <div id="s2">It's quick and easy.</div>
+    </div>
+    <div class="signup2 form">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group nb">
+            {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+            <button class="btn btn-success" type="submit">Sign Up</button>
+            </div>
+        </form>
+        <div class="border-top pt-3 s3">
+            <small class="text-muted">
+                <a href="{% url 'user:login-page' %}">Already have an account?</a>
+            </small>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
