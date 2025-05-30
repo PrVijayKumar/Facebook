@@ -20,7 +20,3 @@ media/
 **.json
 **/fixtures/
 **/staticfiles/fontawesomefree/
-**/staticfiles/rest_framework/
-**/staticfiles/django-extensions/
-**/staticfiles/admin/
-**/staticfiles/post/
