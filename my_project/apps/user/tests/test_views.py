@@ -1,5 +1,6 @@
 from django.test import TestCase
-from post.models import PostModel, PostComments, PostLikes
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostComments, PostLikes
 from user.models import CustomUser, Codes
 from django.utils import timezone
 from django.urls import reverse
@@ -14,7 +15,8 @@ class AllPostsTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -34,7 +36,8 @@ class AllPostsTest(TestCase):
 		self.assertEqual(self.post.post_description, "This post is created for testing purpose.")
 		self.assertEqual(self.post.post_content, "images/yellowcar.webp")
 		self.assertEqual(str(self.post.post_date.date()), str(timezone.now().date()))
-		self.assertEqual(self.post.post_likes, 0)
+		self.assertEqual(self.post.like_count, 1)
+		# self.assertEqual(self.post.post_likes, 0)
 
 
 	# test url exists at correct location

@@ -1483,3 +1483,10 @@ INFO 409 "2025-05-29 18:33:36,041" views.py vijaychoudhary replied on comment of
 INFO 304 "2025-05-29 18:34:04,309" views.py Post with title: my new post liked by user: vijaychoudhary on 2025-05-29 13:04:04.309847+00:00
 WARNING 311 "2025-05-29 18:34:05,911" views.py Post with title: my new post disliked by user: vijaychoudhary on 2025-05-29 13:04:05.911673+00:00
 INFO 304 "2025-05-29 18:34:07,451" views.py Post with title: my new post liked by user: vijaychoudhary on 2025-05-29 13:04:07.451517+00:00
+INFO 409 "2025-05-30 14:39:20,078" views.py jay replied on comment of jay on post: Dummy Post on 2025-05-30 09:09:20.078076+00:00
+INFO 424 "2025-05-30 14:39:41,579" views.py jay commented on post: my new post on 2025-05-30 09:09:41.579072+00:00
+INFO 409 "2025-05-30 14:39:54,025" views.py jay replied on comment of jay on post: my new post on 2025-05-30 09:09:54.025566+00:00
+INFO 409 "2025-05-30 14:40:04,219" views.py jay replied on comment of jay on post: my new post on 2025-05-30 09:10:04.219070+00:00
+WARNING 541 "2025-05-30 14:42:26,384" views.py jay deleted comment: very nice post
+WARNING 541 "2025-05-30 14:42:35,359" views.py jay deleted comment: nice post
+WARNING 541 "2025-05-30 14:42:40,628" views.py jay deleted comment: i like it

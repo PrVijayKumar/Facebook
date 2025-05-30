@@ -15,6 +15,7 @@ router = DefaultRouter()
 
 router.register('userapi', views.UserModelViewSet, basename='user')
 router.register('postapi', views.PostModelViewSet, basename='post')
+router.register('commentapi', views.CommentModelViewSet, basename='comment')
 router.register('testapi', views.TestingAPI, basename='test')
 
 # router.register('userapi', views.UserViewSet, basename='user')

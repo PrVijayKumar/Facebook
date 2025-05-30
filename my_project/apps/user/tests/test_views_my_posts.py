@@ -1,7 +1,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .models import PostModel, Stars, PostLikes
+from .models import PostModel, Stars
+# from .models import PostModel, Stars, PostLikes
 
 User = get_user_model()
 
@@ -26,7 +27,8 @@ class MyPostsViewTest(TestCase):
 
         # Create liked posts
         self.liked_post = PostModel.objects.first()
-        PostLikes.objects.create(post_id=self.liked_post, liked_by=self.user)
+        # PostLikes.objects.create(post_id=self.liked_post, liked_by=self.user)
+        self.liked_post.post_likes.add(self.user)
 
     def test_my_posts_view(self):
         # Send a GET request to the my_posts view

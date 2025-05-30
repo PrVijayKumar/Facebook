@@ -27,7 +27,7 @@
 # from django.utils.decorators import method_decorator
 # import pdb
 # from user.models import User
-from post.models import PostModel
+from post.models import PostModel, PostComments
 from user.models import CustomUser
 
 from post.serializers import PostSerializer
@@ -52,7 +52,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 import logging
 from rest_framework import permissions
 from post.models import PostModel
-from post.serializers import PostSerializer
+from post.serializers import PostSerializer, CommentSerializer
 from django.views.decorators.csrf import csrf_exempt
 from user.forms import UserCreationForm
 from user.serializers import UserSerializer, UserRegisterSerializer
@@ -80,6 +80,7 @@ import logging
 from testing.models import DemoTable
 from testing.serializers import TestingSerializer
 from django.utils import timezone
+from rest_framework.decorators import action
 # from .custompermission import MyPermission
 
 
@@ -164,6 +165,46 @@ class TestingAPI(viewsets.ModelViewSet):
 logger = logging.getLogger(__name__)
 
 
+
+
+class CommentModelPermissions(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+  
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.method == 'PATCH':
+            return request.user.id == obj.com_user.id or request.user.is_staff
+        elif request.method == 'DELETE':
+            logger.info(f"{request.user.username} deleted the comment on post with title: {obj.post.post_title} at {timezone.now()}")
+            return request.user.id == obj.com_user.id or request.user.is_staff
+        elif request.method == 'PUT':
+            logger.info(f"{request.user.username} successfully updated the comment on post with title: {obj.post.post_title}at {timezone.now()}")
+            return request.user.id == obj.com_user.id or request.user.is_staff
+        return request.user.id == obj.com_user.id  # need to modify so can see own stuff
+    # pass
+
+
+class CommentModelViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [CommentModelPermissions]
+    filter_backends = [SearchFilter]
+    search_fields = ['comment_desc']
+    pagination_class = MyPageNumberPagination
+    queryset = PostComments.objects.all().filter(reply_on_comment=None).order_by('-com_date')
+    # pagination_class = LimitOffsetPagination
+
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         posts = PostModel.objects.all()
+    #     else:
+    #         posts = PostModel.objects.all()
+    #         # posts = PostModel.objects.filter(post_user_id=self.request.user.id)
+    #     return posts
+
+
 class PostModelPermissions(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated
@@ -210,6 +251,24 @@ class PostModelViewSet(viewsets.ModelViewSet):
     search_fields = ['post_title']
     pagination_class = MyPageNumberPagination
     # pagination_class = LimitOffsetPagination
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    # @action(detail=True, methods=['post'], url_path='like', url_name='like-post')
+    def like_post(self, request, pk=None):
+        post = self.get_object()
+        user = request.user
+
+        # if not user.is_authenticated:
+        #     return Response({"detail": "Authentication Required."}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if post.post_likes.filter(id=user.id).exists():
+            post.post_likes.remove(user)
+            return Response({"liked": False, "message": "Post unliked."})
+            # return Response({"liked": False, "message": "Post unliked."}, status=status.HTTP_200_OK)
+        else:
+            post.post_likes.add(user)
+            return Response({"liked": True, "message": "Post liked."})
+            # return Response({"liked": True, "message": "Post liked."}, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         if self.request.user.is_superuser:

@@ -10,7 +10,8 @@ import pathlib
 from django.core.files.uploadedfile import SimpleUploadedFile
 # from PIL import Image
 import json
-from post.models import PostComments, PostModel, PostLikes
+from post.models import PostComments, PostModel
+# from post.models import PostComments, PostModel, PostLikes
 # import base64
 # from io import BytesIO
 fake = Faker()

@@ -1,9 +1,11 @@
 import pytest
 from django.contrib.auth import get_user_model
-from post.models import PostModel, PostLikes, PostComments
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostLikes, PostComments
 CustomUser = get_user_model()
 from pytest_factoryboy import register
-from post.tests.factories import CustomUserFactory, PostModelFactory, PostCommentsFactory, PostLikesFactory
+from post.tests.factories import CustomUserFactory, PostModelFactory, PostCommentsFactory
+# from post.tests.factories import CustomUserFactory, PostModelFactory, PostCommentsFactory, PostLikesFactory
 from faker import Faker
 fake = Faker()
 
@@ -11,7 +13,7 @@ fake = Faker()
 register(CustomUserFactory)
 register(PostModelFactory)
 register(PostCommentsFactory)
-register(PostLikesFactory)
+# register(PostLikesFactory)
 
 
 
@@ -51,10 +53,10 @@ def new_ccomment(db, post_comments_factory):
 
 
 # using PostLikesPost to create fixtures
-@pytest.fixture
-def new_clike(db, post_likes_factory):
-	like = post_likes_factory.build()
-	return like
+# @pytest.fixture
+# def new_clike(db, post_likes_factory):
+# 	like = post_likes_factory.build()
+# 	return like
 
 # using CustomUserFactory to create fixtures
 @pytest.fixture
@@ -153,11 +155,11 @@ def postcom(db, new_post):
 
 
 # fixture for testing postlikes
-@pytest.fixture
-def postlike(db, new_post):
-	user1, post = new_post
-	like = PostLikes.objects.create(post_id=post, liked_by=user1)
-	return user1, post, like
+# @pytest.fixture
+# def postlike(db, new_post):
+# 	user1, post = new_post
+# 	like = PostLikes.objects.create(post_id=post, liked_by=user1)
+# 	return user1, post, like
 
 
 	

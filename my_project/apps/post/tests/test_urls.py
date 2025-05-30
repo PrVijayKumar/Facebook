@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase
-from post.models import PostModel, PostComments, PostLikes
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostComments, PostLikes
 from user.models import CustomUser
 
 

@@ -1,6 +1,7 @@
 from django.db.models.signals import pre_save, post_save, pre_delete, post_delete
 from django.dispatch import receiver
-from .models import PostModel, PostLikes, PostComments
+from .models import PostModel, PostComments
+# from .models import PostModel, PostLikes, PostComments
 from django.utils import timezone
 import logging
 
@@ -36,33 +37,52 @@ def post_delete_post(sender, instance, **kwargs):
 
 
 
+# pre save likes
+@receiver(pre_save, sender=PostModel)
+def pre_save_likes(sender, instance, **kwargs):
+	if instance.post_user not in instance.post_likes.all():
+		logger.info(f"User: {instance.post_user.username} liked post with title: {instance.post_title} at '{timezone.now()}'")
+	else:
+		logger.info(f"User: {instance.post_user.username} disliked post with title: {instance.post_title} at '{timezone.now()}'")
+
+
+
 
 # pre save likes
-@receiver(pre_save, sender=PostLikes)
-def pre_save_likes(sender, instance, **kwargs):
-	plike = PostLikes.objects.filter(post_id=instance.post_id).filter(liked_by_id=instance.liked_by_id)
-	if not plike:
-		logger.info(f"User: {instance.liked_by.username} liked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
-	else:
-		logger.info(f"User: {instance.liked_by.username} disliked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
+# @receiver(pre_save, sender=PostLikes)
+# def pre_save_likes(sender, instance, **kwargs):
+	# plike = PostLikes.objects.filter(post_id=instance.post_id).filter(liked_by_id=instance.liked_by_id)
+	# if not plike:
+	# 	logger.info(f"User: {instance.liked_by.username} liked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
+	# else:
+	# 	logger.info(f"User: {instance.liked_by.username} disliked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
 
 # post save likes
-@receiver(post_save, sender=PostLikes)
+@receiver(post_save, sender=PostModel)
 def post_save_likes(sender, instance, created, **kwargs):
 	pass
 
-
+# post save likes
+# @receiver(post_save, sender=PostLikes)
+# def post_save_likes(sender, instance, created, **kwargs):
+# 	pass
 
 # pre delete likes
-@receiver(pre_delete, sender=PostLikes)
+@receiver(pre_delete, sender=PostModel)
 def pre_delete_likes(sender, instance, **kwargs):
 	pass
 
 
 # post delete likes
-@receiver(post_delete, sender=PostLikes)
+@receiver(post_delete, sender=PostModel)
 def post_delete_likes(sender, instance, **kwargs):
-	logger.warning(f"User: {instance.liked_by.username} disliked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
+	logger.warning(f"User: {instance.post_user.username} disliked post with title: {instance.post_title} at '{timezone.now()}'")
+
+
+# post delete likes
+# @receiver(post_delete, sender=PostLikes)
+# def post_delete_likes(sender, instance, **kwargs):
+# 	logger.warning(f"User: {instance.liked_by.username} disliked post with title: {instance.post_id.post_title} at '{timezone.now()}'")
 
 
 

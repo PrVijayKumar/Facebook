@@ -1,12 +1,78 @@
 # from user.serializers import UserSerializer
 from rest_framework import serializers
-from .models import PostModel
+# from .models import PostModel, PostComments, PostLikes
+from .models import PostModel, PostComments
 from django.utils import timezone
 from rest_framework.response import Response
+
+
+class ReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostComments
+        fields = ['id', 'comment_desc', 'com_date', 'post', 'com_user']
+        read_only_fields = ['com_user']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    # replies = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
+    Replies = ReplySerializer(many=True, read_only=True, source='replies')
+    Replies = ReplySerializer(many=True, read_only=True, source='replies')
+
+    # def __init__(self, *args, **kwargs):
+        # super().__init__(*args, **kwargs)
+        # breakpoint()
+        # mypost = PostModel.objects.get(post_title="Dummy Post")
+        # self.fields['reply_on_comment'].choices = [(None, 'None')] + [(reply.id, reply.comment_desc) for reply in PostComments.objects.all().filter(post=getattr(self.instance, 'post', None))]
+        # self.fields['reply_on_comment'].choices = [(None, 'None')] + [(reply.id, reply.comment_desc) for reply in PostComments.objects.all()]
+        # self.fields['reply_on_comment'].queryset = PostComments.objects.all().filter(post=getattr(self.instance, 'post', None))
+        # self.fields['reply_on_comment'].queryset = PostComments.objects.all().filter(post_id=mypost.id)
+
+    def _user(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            # breakpoint()
+            return request.user.username
+        
+    class Meta:
+        model = PostComments
+        fields = ['id', 'comment_desc', 'com_date', 'post', 'com_user', 'Replies', 'reply_on_comment']
+        read_only_fields = ['com_user']
+    # post_title = serializers.SlugRelatedField(read_only=True, slug_field='post_title')
+    # post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+    # class Meta:
+    #     model = PostComments
+    #     fields = ['id', 'comment_desc', 'com_date', 'post_id', 'com_user', 'post_user', 'post_title']
+    #     read_only_fields = ['com_date', 'post_id', 'com_user']
+    
+    def create(self, validated_data):
+        validated_data['com_user'] = self.context['request'].user
+        # breakpoint()
+        
+        if validated_data['reply_on_comment'] is not None:
+            if validated_data['reply_on_comment'].post.id != validated_data['post'].id:
+                validated_data['post'] = PostModel.objects.get(id=validated_data['reply_on_comment'].post.id)
+            # validated_data['reply_on_comment'] = validated_data['reply_on_comment']
+        # else:
+        # validated_data['post_id'] = self.context['post']
+        return super().create(validated_data)
+
+# class CreateReplySerializer(serializers.Serializer):
+#     comment_desc = serializers.CharField(max_length=200)
+#     post = serializers.IntegerField()
+#     com_user = serializers.IntegerField(default=1)
+#     reply_on_comment = serializers.IntegerField(default=None, allow_null=True)
+
+#     def create(self, valid_data):
+#         return PostComments.objects.create(**valid_data)
+    
+
 
 class PostSerializer(serializers.ModelSerializer):
     pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
     post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+    is_liked = serializers.SerializerMethodField()
+    # like_count = serializers.SerializerMethodField()
+    # likes = serializers.PrimaryKeyRelatedField(many=True, queryset=PostLikes.objects.all(), source='post_likes')
 
     def _user(self, obj):
         request = self.context.get('request', None)
@@ -16,8 +82,15 @@ class PostSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = PostModel
-        fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'post_likes', 'pcom']
-        read_only_fields = ['post_date', 'post_user', 'post_likes']
+        fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'like_count', 'pcom', 'is_liked']
+        # fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'post_likes', 'pcom']
+        read_only_fields = ['post_date', 'post_user', 'like_count']
+
+    def get_is_liked(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.post_likes.filter(id=request.user.id).exists()
+        return False
 
     def create(self, validated_data):
         # breakpoint()
