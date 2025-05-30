@@ -20,5 +20,4 @@ media/
 **.json
 **/fixtures/
 **/staticfiles/fontawesomefree/css/
-**/staticfiles/fontawesomefree/js/
 **/staticfiles/fontawesomefree/js-packages/
