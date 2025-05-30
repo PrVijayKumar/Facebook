@@ -1,0 +1,15 @@
+{% load cache %}
+<!doctype html>
+<html>
+    <head>
+        <title>Testing for caching</title>
+    </head>
+    <body>
+        <h1>Computer</h1>
+        <h1>Coding</h1>
+        {% cache 30 course %}
+        <h1>EON</h1>
+        <h1>IT</h1>
+        {% endcache course%}
+    </body>
+</html>

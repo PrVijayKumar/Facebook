@@ -1,0 +1,5 @@
+DEBUG myapp 115 2025-04-21 15:35:47,403 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a dubug message.
+INFO myapp 116 2025-04-21 15:35:47,404 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an info message.
+WARNING myapp 117 2025-04-21 15:35:47,404 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a warning message.
+ERROR myapp 118 2025-04-21 15:35:47,404 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an error message.
+CRITICAL myapp 119 2025-04-21 15:35:47,407 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a critical message.

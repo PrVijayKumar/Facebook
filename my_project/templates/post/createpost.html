@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'post/css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}"/>
+
+
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+    {% if messages %}
+        {% for message in messages%}
+            {{message}}
+        {% endfor %}
+    {% endif %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link  active" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+        </li>
+      </ul>
+    <h1 class="text-primary text-center">What's On Your Mind</h1>
+<div class="col-5 mt4" id="form_b">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-primary" value="submit"/>
+    </form>
+</div>
+<div class="logoutfm">
+    <form action="{% url 'user:logout' %}" method="post">                        
+        {% csrf_token %}
+        <button id="lbtn" type="submit">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </button>
+    </form>
+</div>
+{% comment %} <div style="border: 1px solid blue; width: 10%;background: blue;color: white;font-size: 30px;position: absolute;left: 80%;top: 5%;text-align:center;">
+    {{ user.username }}
+    <form action="{% url 'user:logout' %}" method="post">                        
+        {% csrf_token %}
+        <button id="lbtn" type="submit">Log Out</button>
+    </form>
+</div> {% endcomment %}
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock %}

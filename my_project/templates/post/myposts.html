@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'post/css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}"/>
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+  </li>
+</ul>
+{{ user.username|json_script:"c_user"}}
+{% for post in posts %}
+<div id="fposts" class="f{{post.id}}">
+    <span id="pdate">{{ post.post_updated_date }}</span>
+    <span id="debtn"><a href="#ModalEditPost" data-toggle="modal" target-data="#ModalEditPost" class="popbtn btn btn-primary btn-sm" onclick="getId({{post.id}})">Edit</a> <a href="#ModalDeletePost" data-toggle="modal" target-data="#ModalDeletePost" class="delbtn btn btn-danger btn-sm">Delete</a></span><br>
+    <span id="ptitle">{{post.post_title}}</span><br>
+    {% if post.post_content %}
+      <img src="{{ post.post_content.url }}"  height="300"/>
+    {% endif %}
+    Posted By: <span id="fbuser">{{ post.post_user }}</span><br>
+    <span id="dpost" class="mydesc">Description: {{ post.post_description }}</span><span id="rbtn"><a href="{% url 'post:detpost' id=post.id %}">Read More</a></span><br>
+    <span><i class="fa-solid fa-heart"></i></span> <span id="nlikes">{{ post.post_likes }}</span>
+    <span style="color:#FFBF00;"><i class="fas fa-star"></i></span> <span style="color:#FFBF00;" id="nstars">{{post.post_stars}}</span>
+    <hr>
+    <div id="popt">
+      {% if post.id in likes %}
+      <button class="blike liked" onclick="ldlike({{post.id}}, {{request.user.id}}, this)"><i class="fa-solid fa-heart"></i> Like</button>
+      {% else %}
+      <button class="blike" onclick="ldlike({{post.id}}, {{request.user.id}}, this)"><i class="fa-regular fa-heart"></i> Like</button>
+      {% endif %}
+      <button class="bstars" data-toggle="modal" data-target="#PaymentModal" onclick=""><i class="far fa-star"></i> Stars</button>
+      <button class="bcom" data-toggle="modal" data-target="#CommentModal"><i class="fa-regular fa-comment"></i> Comment</button>
+      <button class="bshare"><i class="fa-solid fa-share"></i> Share</button>
+    </div>
+    <div id="purl">
+      {% if post.id in likes %}
+      <p id="lstatus">Liked</p>
+      {% else %}
+      <p id="lstatus">Not Liked</p>
+      {% endif %}
+      <p id="eurl">{% url 'post:epost' id=post.id %}</p>
+      <p id="durl">{% url 'post:dpost' id=post.id %}</p>
+      <p id="curl">{% url 'post:comment' id=post.id %}</p>
+      <p id="fcurl">{% url 'post:fcomments' id=post.id %}</p>
+      {% csrf_token %}
+    </div>
+</div>
+<br>
+{% endfor %}
+
+
+
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    {% if posts.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="/post/myposts/?page={{posts.previous_page_number}}" tabindex="-1">Previous</a>
+    </li>
+    {% endif %}
+    {% for n in totalPageList %}
+      <li class="page-item"><a class="page-link" href="/post/myposts/?page={{n}}">{{n}}</a></li>
+    {% endfor %}
+    {% if posts.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="/post/myposts/?page={{posts.next_page_number}}">Next</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/post/myposts/?page={{lastpage}}">Last</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalEditPost" area-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" id="econtent">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="emodal" class="modal-body">
+              {% comment %} u_post is for updating the post through ajax {% endcomment %}
+            {% comment %} <form action="" method="post" enctype="multipart/form-data" onsubmit="u_post(this)">  {% endcomment %}
+            <form action="" id="uform" method="post" enctype="multipart/form-data" class="needs-validation" novalidate> 
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="p_title">Post Title</label>
+                  <input type="text" class="form-control ptitle" id="p_title" name="post_title" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                  <div class="invalid-feedback">
+                    Please provide a post title.
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="p_desc">Post Description</label>
+                  <textarea rows="5" class="form-control pdesc" id="p_desc" name="post_description" placeholder="Write Description" required></textarea>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                  <div class="invalid-feedback">
+                    Please provide post description.
+                  </div>
+                </div>
+                <div class="modal-imgbox" id="imgbox">
+                    <img src="" alt="" class="modal-image">
+                </div>
+                <div class="form-group">
+                    <label for="p_content">Choose File</label>
+                    <input type="file" class="form-control-file" id="p_content" name="post_content" onchange="imgChange()">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save</button>
+              </form>
+            <div >
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="modal" id="ModalDeletePost" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Move to your bin?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Items in your bin will be automatically deleted after 30 days. You can delete them from your bin earlier by going to activity log in your settings.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white text-primary" data-dismiss="modal">Cancel</button>
+        <a href="#" id="cdel" class="btn btn-primary">Move</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="CommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content com_modal">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="comptitle">Modal title</h5>
+        <button type="button" class="close" id="cclose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="p_user"></p>
+        <div class="modal_imgbox">
+            <img src="" class="com_img" alt="Image Could not be loaded" width="100%"/>
+        </div>
+        <p id="p_desc"></p>
+        <hr>
+        <p>Top Comments</p>
+        <div id="ucom"></div>
+      </div>
+      <div class="modal-footer">
+        <div class="customw-80">  
+            <form action="" method="POST" id="cform">
+              <div class="form-group myinput">
+                {% csrf_token %}
+                <input type="text" name="comment_desc" class="form-control" oninput="cChange(this)" id="commentp" placeholder="Write a comment...">
+                <button type="submit" class="btn btn-secondary myclass" id="csub" disabled><i class="fa-regular fa-paper-plane"></i></button>
+              </div>
+            </form>
+        </div>
+        <div class="actions">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="DeleteCommentModal" tabindex="-1" role="dialog" data-backdrop="static" backdropClasses='bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40'>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content mymodalclass">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100">Delete Comment?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this comment?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white text-primary" data-dismiss="modal">No</button>
+        <a type="submit" href='#' id="delcbtn" class="btn btn-primary">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="PaymentModal" tabindex="-1" role="dialog" aria-labelledby="PaymentModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content com_modal">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100" id="comptitle">Send stars to support IAS academic</h5>
+        <a class="btn btn-warning btn-sm" href="{% url 'products:product-list' %}"><i class="far fa-star"></i> Buy Stars</a>
+        <button type="button" class="close" id="cclose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <div class="col-12">  
+            <form action="{% url 'post:create_payment' 62 %}" id="sendStars" method="POST">
+              <div class="form-group">
+                {% csrf_token %}
+                <input type="text" name="amount" class="form-control" id="amountp" aria-label="Amount (to the nearest dollar)" required>
+                <input type="hidden" name="received_by" value="" id="stars_received_by">
+                <input type="hidden" name="post" value="" id="stars_sent_on_post">
+                <div class="input-group-append">
+                  <span class="input-group-text">$</span>
+                  <span class="input-group-text">0.00</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Total Stars:</label>
+                <span class="btn btn-warning" id="quantity_stars">{{ nos }}</span>
+                {% comment %} <input type="hidden" name="hidden_stars" id="hidden_stars" value=""> {% endcomment %}
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary col-12 myclass" id="">Make Payment<i class="fa-regular fa-paper-plane"></i></button>
+              </div>
+              <div class="form-group">
+                {% comment %} <button class="btn btn-light btn-block border border-dark myclass" id="">Cancel Payment<i class="fa-regular fa-paper-plane"></i></button> {% endcomment %}
+                <button type="button" class="btn btn-light btn-block border border-dark myclass" id="cclose" data-dismiss="modal" aria-label="Close">
+                  Cancel Payment
+                </button>
+              </div>
+            </form>
+        </div>
+        <div class="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="logoutfm">
+  <form action="{% url 'user:logout' %}" method="post">                        
+      {% csrf_token %}
+      <button id="lbtn" type="submit">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </button>
+  </form>
+</div>
+{% comment %} <div style="border: 1px solid blue; width: 10%;background: blue;color: white;font-size: 30px;position: absolute;left: 80%;top: 5%;text-align:center;">
+    {{ user.username }}
+    <form action="{% url 'user:logout' %}" method="post">                        
+        {% csrf_token %}
+        <button id="lbtn" type="submit">Log Out</button>
+    </form>
+</div> {% endcomment %}
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+
+
+{% endblock %}
+{% block javas %}
+    <script src="{% static 'post/js/script.js' %}"></script>
+    <script src="{% static 'user/js/script.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %} 
+{% block title %} Products {% endblock title%} 
+{% block content %} 
+{% if user.is_authenticated %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+  </li>
+</ul>
+{% for product in products %}
+<div class="card" style="width: 18rem">
+  <img
+    class="card-img-top"
+    src="{{product.thumbnail.url}}"
+    alt="Card image cap"
+  />
+  <div class="card-body">
+    <h5 class="card-title">{{product.name}}</h5>
+    <p class="card-text">${{product.desc}}</p>
+    <a
+      href="{% url 'products:product-detail' product.id %}"
+      class="btn btn-primary"
+      >View Detail</a
+    >
+  </div>
+</div>
+{% endfor %} 
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock content %}

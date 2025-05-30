@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'post/css/styles.css' %}">
+{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+    </li>
+  </ul>
+<div id="fposts">
+    <span id="pdate">{{ post.post_date }}</span>
+    {% if user.id == post.post_user.id %}
+    <span id="debtn"><a href="#ModalEditPost" data-toggle="modal" target-data="#ModalEditPost" class="popbtn">Edit</a> <a href="#ModalDeletePost" data-toggle="modal" target-data="#ModalDeletePost">Delete</a></span><br>
+    {% else %}
+    <br>
+    {% endif %}
+    <span id="ptitle">{{post.post_title}}</span><br>
+    {% if post.post_content %}
+      <img src="{{ post.post_content.url }}"  height="300"/>
+    {% endif%}
+    Posted By: <span>{{ post.post_user }}</span><br>
+    <div id="desc">
+        <span ><span id="desct">Description: </span><span class="mydesc">{{ post.post_description }}</span></span>
+    </div>
+    <div id="purl">
+        <p id="eurl">{% url 'post:epost' id=post.id %}</p>
+        <p id="durl">{% url 'post:dpost' id=post.id %}</p>
+      </div>
+</div>
+
+<br><br>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalEditPost" area-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" id="econtent">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="emodal" class="modal-body">
+            <form action="" method="post" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="p_title">Post Title</label>
+                  <input type="text" class="form-control ptitle" id="p_title" name="post_title">
+                </div>
+                <div class="form-group">
+                  <label for="p_desc">Post Description</label>
+                  <textarea rows="5" class="form-control pdesc" id="p_desc" name="post_description" placeholder="Write Description"></textarea>
+                </div>
+                <div class="modal-imgbox" id="imgbox">
+                    <img src="" alt="" class="modal-image">
+                </div>
+                <div class="form-group">
+                    <label for="p_content">Choose File</label>
+                    <input type="file" class="form-control-file" id="p_content" name="post_content" onchange="imgChange()">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save</button>
+              </form>
+            <div >
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<div class="modal" id="ModalDeletePost" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Move to your bin?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Items in your bin will be automatically deleted after 30 days. You can delete them from your bin earlier by going to activity log in your settings.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white text-primary" data-dismiss="modal">Cancel</button>
+        <a href="#" id="cdel" class="btn btn-primary">Move</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div style="border: 1px solid blue; width: 10%;background: blue;color: white;font-size: 30px;position: absolute;left: 80%;top: 5%;text-align:center;">
+    {{ user.username }}
+    <form action="{% url 'user:logout' %}" method="post">                        
+        {% csrf_token %}
+        <button id="lbtn" type="submit">Log Out</button>
+    </form>
+</div>
+
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock %}
+{% block javas %}
+<script src="{% static 'post/js/script.js' %}"></script>
+{% endblock %}

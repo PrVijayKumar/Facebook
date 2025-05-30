@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+{% block title %} Buy Product {% endblock title%} 
+{% block script %} <script src="https://js.stripe.com/v3/"></script> {% endblock script%} 
+{% block content %}
+{% if user.is_authenticated %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+  </li>
+</ul>
+<div class="card-deck" style="width: 18rem; !important">
+  {% for price in prices %}
+  <div class="card" >
+    <img
+      class="card-img-top"
+      src="{{product.thumbnail.url}}"
+      alt="Card image cap"
+    />
+    <div class="card-body">
+      <h5 class="card-title">{{product.name}}</h5>
+      <p class="card-text">{{product.desc}}</p>
+      <div class="card-text">
+        <h5 class="card-text">${{ price.price }} for each</h5>
+          <form
+          action="{% url 'products:create-checkout-session' price.id %}"
+          method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Checkout</button>
+            <a>
+          </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+    <div style="background:red; color: white; text-align: center;"><h1>You are not Logged In !!!</h1></div>
+    <a href="{% url 'user:login-page' %}">Login</a>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,15 @@
+DEBUG myapp 115 2025-04-21 15:19:06,697 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a dubug message.
+INFO myapp 116 2025-04-21 15:19:06,697 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an info message.
+WARNING myapp 117 2025-04-21 15:19:06,697 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a warning message.
+ERROR myapp 118 2025-04-21 15:19:06,697 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an error message.
+CRITICAL myapp 119 2025-04-21 15:19:06,787 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a critical message.
+DEBUG myapp 115 2025-04-21 15:19:38,996 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a dubug message.
+INFO myapp 116 2025-04-21 15:19:38,997 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an info message.
+WARNING myapp 117 2025-04-21 15:19:38,997 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a warning message.
+ERROR myapp 118 2025-04-21 15:19:38,997 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an error message.
+CRITICAL myapp 119 2025-04-21 15:19:38,999 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a critical message.
+DEBUG myapp 115 2025-04-21 15:19:47,520 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a dubug message.
+INFO myapp 116 2025-04-21 15:19:47,520 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an info message.
+WARNING myapp 117 2025-04-21 15:19:47,520 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a warning message.
+ERROR myapp 118 2025-04-21 15:19:47,520 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is an error message.
+CRITICAL myapp 119 2025-04-21 15:19:47,521 /home/thoughtwin/vijay/facebook/my_project/my_project/apps/user/views.py views register views.py This is a critical message.

@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+**/migrations/**
+/my_project/media/
+.env
+../f_env/*
+cert.crt
+cert.key
+static/
+media/
+**.json
