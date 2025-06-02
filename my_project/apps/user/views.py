@@ -310,7 +310,8 @@ def all_posts(request):
     posts = PostModel.objects.all().order_by('-post_date')
     # likes = PostLikes.objects.filter(liked_by=request.POST['user'])
     # likes = PostLikes.objects.filter(liked_by=request.user.id)
-    liked_posts = posts.post_likes.filter(id=request.user.id)
+    # liked_posts = posts.post_likes.filter(id=request.user.id) # wrong code
+    liked_posts = PostModel.objects.filter(post_likes=request.user)
     # breakpoint()
     pages = Paginator(posts, 5)
     page_number = request.GET.get("page")

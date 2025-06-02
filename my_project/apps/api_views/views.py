@@ -82,7 +82,7 @@ from testing.serializers import TestingSerializer
 from django.utils import timezone
 from rest_framework.decorators import action
 # from .custompermission import MyPermission
-
+from django.shortcuts import get_object_or_404
 
 # swagger imports
 # from rest_framework.generics import GenericAPIView
@@ -105,6 +105,8 @@ from rest_framework.decorators import action
 #         return Response({
 #             'user': UserSerializer(user, context=self.get_serializer_context()).data,
 #         }, status=status.HTTP_201_CREATED)
+
+
 
 class TestingAPI(viewsets.ModelViewSet):
     queryset = DemoTable.objects.all()
@@ -193,9 +195,22 @@ class CommentModelViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ['comment_desc']
     pagination_class = MyPageNumberPagination
-    queryset = PostComments.objects.all().filter(reply_on_comment=None).order_by('-com_date')
     # pagination_class = LimitOffsetPagination
 
+    def get_queryset(self):
+        search_term = self.request.query_params.get('q')
+        queryset = PostComments.objects.all().order_by('-com_date')
+        if self.action == "list" and not search_term:
+            queryset = PostComments.objects.all().filter(reply_on_comment=None).order_by('-com_date')
+        
+        return queryset
+            
+
+               
+    # def retrieve(self, request, *args, **kwargs):
+    #     comment = get_object_or_404(PostComments, id=kwargs['pk'])
+    #     breakpoint()
+    #     return Response(CommentSerializer(comment).data)
     # def get_queryset(self):
     #     if self.request.user.is_superuser:
     #         posts = PostModel.objects.all()
@@ -252,8 +267,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     pagination_class = MyPageNumberPagination
     # pagination_class = LimitOffsetPagination
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     # @action(detail=True, methods=['post'], url_path='like', url_name='like-post')
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def like_post(self, request, pk=None):
         post = self.get_object()
         user = request.user
@@ -277,6 +292,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
             posts = PostModel.objects.all()
             # posts = PostModel.objects.filter(post_user_id=self.request.user.id)
         return posts
+    
 
 
 # @csrf_exempt

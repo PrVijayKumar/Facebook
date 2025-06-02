@@ -40,10 +40,11 @@ def post_delete_post(sender, instance, **kwargs):
 # pre save likes
 @receiver(pre_save, sender=PostModel)
 def pre_save_likes(sender, instance, **kwargs):
-	if instance.post_user not in instance.post_likes.all():
-		logger.info(f"User: {instance.post_user.username} liked post with title: {instance.post_title} at '{timezone.now()}'")
-	else:
-		logger.info(f"User: {instance.post_user.username} disliked post with title: {instance.post_title} at '{timezone.now()}'")
+	if instance.id is not None:
+		if instance.post_user not in instance.post_likes.all():
+			logger.info(f"User: {instance.post_user.username} liked post with title: {instance.post_title} at '{timezone.now()}'")
+		else:
+			logger.info(f"User: {instance.post_user.username} disliked post with title: {instance.post_title} at '{timezone.now()}'")
 
 
 

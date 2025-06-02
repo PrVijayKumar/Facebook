@@ -4,19 +4,35 @@ from rest_framework import serializers
 from .models import PostModel, PostComments
 from django.utils import timezone
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
+from django.core.files.uploadedfile import UploadedFile
+from django.core.files.base import ContentFile
+import base64
+import io
+import uuid
+
+# class ReplySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PostComments
+#         fields = ['id', 'comment_desc', 'com_date', 'post', 'com_user', "Replies"]
+#         read_only_fields = ['com_user']
 
 
-class ReplySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostComments
-        fields = ['id', 'comment_desc', 'com_date', 'post', 'com_user']
-        read_only_fields = ['com_user']
+# class RecursiveField(serializers.Serializer):
 
+#     def to_representation(self, value):
+#         parent_serializer = self.parent.parent.__class__(value, context=self.context)
+#         breakpoint()
+#         return parent_serializer.data
 
 class CommentSerializer(serializers.ModelSerializer):
     # replies = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
-    Replies = ReplySerializer(many=True, read_only=True, source='replies')
-    Replies = ReplySerializer(many=True, read_only=True, source='replies')
+    # Replies = ReplySerializer(many=True, read_only=True, source='replies')
+    # Replies = ReplySerializer(many=True, read_only=True, source='replies')
+    # reply_on_comment = RecursiveField(many=True)
+    # Replies = RecursiveField(many=True, read_only=True, source='replies')
+    Replies = serializers.SerializerMethodField()
 
     # def __init__(self, *args, **kwargs):
         # super().__init__(*args, **kwargs)
@@ -36,7 +52,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostComments
         fields = ['id', 'comment_desc', 'com_date', 'post', 'com_user', 'Replies', 'reply_on_comment']
-        read_only_fields = ['com_user']
+        read_only_fields = ['com_user', 'replies']
     # post_title = serializers.SlugRelatedField(read_only=True, slug_field='post_title')
     # post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
     # class Meta:
@@ -55,6 +71,13 @@ class CommentSerializer(serializers.ModelSerializer):
         # else:
         # validated_data['post_id'] = self.context['post']
         return super().create(validated_data)
+    
+
+    def get_Replies(self, obj):
+        # breakpoint()
+        records = obj.replies.order_by('-com_date')
+        return CommentSerializer(records, many=True, context=self.context).data
+
 
 # class CreateReplySerializer(serializers.Serializer):
 #     comment_desc = serializers.CharField(max_length=200)
@@ -64,13 +87,32 @@ class CommentSerializer(serializers.ModelSerializer):
 
 #     def create(self, valid_data):
 #         return PostComments.objects.create(**valid_data)
-    
+
+class Base64OrImageField(serializers.ImageField):
+
+    def to_internal_value(self, data):
+        if isinstance(data, str):
+            if data.startswith('data:image/'):
+                imgformat, imgstr = data.split(';base64,')
+                ext = imgformat.split('/')[-1]
+                img_data = base64.b64decode(imgstr)
+                file_name = str(uuid.uuid4())[:12] + '.' + ext
+                data = ContentFile(img_data, name=file_name)
+            else:
+                try:
+                    img_data = base64.b64decode(data)
+                    file_name = str(uuid.uuid4())[:12] + '.jpg' # default format
+                    data = ContentFile(img_data, name=file_name)
+                except Exception:
+                    pass
+        return super().to_internal_value(data)
 
 
 class PostSerializer(serializers.ModelSerializer):
     pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
     post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
     is_liked = serializers.SerializerMethodField()
+    post_content = Base64OrImageField(required=False)
     # like_count = serializers.SerializerMethodField()
     # likes = serializers.PrimaryKeyRelatedField(many=True, queryset=PostLikes.objects.all(), source='post_likes')
 
@@ -92,10 +134,35 @@ class PostSerializer(serializers.ModelSerializer):
             return obj.post_likes.filter(id=request.user.id).exists()
         return False
 
+    # def validate_post_content(self, value):
+    #     breakpoint()
+    #     if isinstance(value, str):
+    #         try:
+    #             header, data = value.split(";base64,")
+    #             decoded_file = base64.b64decode(data)
+    #             image = Image.open(io.BytesIO(decoded_file))
+    #             image.verify()  # Verify that it is a valid image
+    #         except Exception as e:
+    #             raise serializers.ValidationError("Invalid image format")
+    #     elif isinstance(value, UploadedFile):
+    #         if not value.content_type.startswith('image/'):
+    #             raise serializers.ValidationError("Uploaded file is not an image")
+    #     else:
+    #         raise serializers.ValidationError("Unsupported image format")
+    #     return value
+
+
+    # def validate_post_content(self, value):
+    #     breakpoint()
+    #     format, imgstr = value.split(';base64,')
+    #     ext = format.split('/')[-1]
+    #     value = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+    #     return value
     def create(self, validated_data):
         # breakpoint()
         validated_data['post_user'] = self.context['request'].user
         return super().create(validated_data)
+
         
 
     # def __init__(self, *args, **kwargs):
