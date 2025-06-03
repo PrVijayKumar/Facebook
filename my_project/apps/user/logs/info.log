@@ -564,3 +564,4 @@ INFO 137 "2025-05-22 18:01:23,499" views.py New account created for user:testuse
 WARNING 228 "2025-05-22 18:01:37,584" views.py User enterered wrong username:shah@gmail.com and password:@@123456
 WARNING 228 "2025-05-22 18:01:42,200" views.py User enterered wrong username:shah@gmail.com and password:@@123456
 INFO 137 "2025-05-29 18:34:47,979" views.py New account created for user:jay on 2025-05-29 13:04:47.979238+00:00
+WARNING 229 "2025-06-03 18:15:32,303" views.py User enterered wrong username:vijay and password:@@123456

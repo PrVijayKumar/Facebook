@@ -29,7 +29,7 @@
         Posted By: <span id="fbuser">{{ post.post_user }}</span><br>
         {% comment %} Description: <span id="desc">{{ post.post_title }}</span><br> {% endcomment %}
         Description: <span id="dpost" class="mydesc">{{ post.post_description }}</span><span id="rbtn"><a href="{% url 'post:detpost' id=post.id %}">Read More</a></span><br>
-        <span><i class="fa-solid fa-heart"></i></span> <span id="nlikes">{{post.post_likes}}</span>
+        <span><i class="fa-solid fa-heart"></i></span> <span id="nlikes">{{post.like_count}}</span>
         <span style="color:#FFBF00;"><i class="fas fa-star"></i></span> <span style="color:#FFBF00;" id="nstars">{{post.post_stars}}</span>
         <hr>
         <div id="popt">

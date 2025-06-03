@@ -306,7 +306,7 @@ def like_post(request, id):
 
                 # logger for post like
                 logger.info(f"Post with title: {obj.post_title} liked by user: {request.user.username} on {timezone.now()}")
-                likes.save()
+                # likes.save()
             else:
                 obj.post_likes.remove(fuser)
                 # obj.post_likes -= 1
@@ -314,7 +314,7 @@ def like_post(request, id):
                 # print(likes)
                 # logger for post dislike
                 logger.warning(f"Post with title: {obj.post_title} disliked by user: {request.user.username} on {timezone.now()}")
-                likes.delete()
+                # likes.delete()
                 # likes.save()
             # obj.save()
 

@@ -1,0 +1,11 @@
+INFO my_project.middleware.timespent 36 "2025-06-03 19:28:38,968" /home/thoughtwin/vijay/facebook/my_project/my_project/middleware/timespent.py timespent __call__ timespent.py User with username: jay 
+	 spent 0 days, 0 hours, 11 minutes, 2 seconds 
+	 from 2025-06-03 13:47:36.642980+00:00 to 2025-06-03 13:58:38.968027+00:00
+
+
+INFO my_project.middleware.timespent 36 "2025-06-03 19:30:32,777" /home/thoughtwin/vijay/facebook/my_project/my_project/middleware/timespent.py timespent __call__ timespent.py 
+User with username: jay 
+	 spent 0 days, 0 hours, 0 minutes, 14 seconds 
+	 from 2025-06-03 14:00:17.905586+00:00 to 2025-06-03 14:00:32.777457+00:00
+
+

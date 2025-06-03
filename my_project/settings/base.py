@@ -45,6 +45,8 @@ print("DEBUG Value", DEBUG)
 ALLOWED_HOSTS = ['*']
 
 
+# Geo Ip Path
+GEOIP_PATH = os.path.join(BASE_DIR, 'middleware/geoip')
 
 # Application definition
 
@@ -76,7 +78,7 @@ INSTALLED_APPS = [
     # 'django_client',
     'a_stripe',
     'drf_yasg',
-
+    'geoip2',
 ]
 
 WHITENOISE_MANIFEST_STRICT = True
@@ -93,6 +95,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'my_project.middleware.main.MyMiddleware',
+    'my_project.middleware.trackuser.TrackUserMiddleware',
+    'my_project.middleware.timespent.TimeSpentMiddleware',
 ]
 
 
@@ -453,6 +458,22 @@ LOGGING = {
             # 'backupCount': 7, # keep 7 days of logs
             'backupCount': 3, # keep 3 files for backup
             'formatter': 'standard',
+        },
+        'ip_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'middleware/logs/user_ip.log',
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 3,
+            'formatter': 'standard'
+        },
+        'timespent_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'middleware/logs/timespent.log',
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'standard'
         }
     },
     'loggers': {
@@ -495,7 +516,22 @@ LOGGING = {
             'handlers': ['console', 'posts_file', 'email_handler'],
             'level': 'INFO',
             'propagate': False
-        }
+        },
+        'my_project.middleware.main': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'my_project.middleware.trackuser': {
+            'handlers': ['console', 'ip_file'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'my_project.middleware.timespent': {
+            'handlers': ['console', 'timespent_file'],
+            'level': 'INFO',
+            'propagate': False
+        },
         # 'myapp': {
         #     'handlers': ['rotating_file'],
         #     'level': 'DEBUG',

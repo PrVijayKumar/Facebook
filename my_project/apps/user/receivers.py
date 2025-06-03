@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 def login_success(sender, request, user, **kwargs):
 	signals.request_by_user.send(sender=CustomUser, username=user.username, request=request)
 	logger.info(f"User with username: '{user.username}' successfully logged in at '{timezone.now()}'")
+	# print(logger)
 
 # user_logged_in.connect(login_success, sender=CustomUser)
 
@@ -28,6 +29,7 @@ def login_success(sender, request, user, **kwargs):
 def log_out(sender, request, user, **kwargs):
 	cache.clear()
 	logger.info(f"User with username: '{user.username}' successfully logged out at '{timezone.now()}'")
+	# print(logger)
 
 # user_logged_out.connect(log_out, sender=CustomUser)
 
