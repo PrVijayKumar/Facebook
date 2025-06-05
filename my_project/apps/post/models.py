@@ -5,6 +5,15 @@ from user.models import CustomUser
 from django.utils import timezone
 import datetime
 
+def get_file_name(instance, filename):
+    ar = filename.split('.')
+    ext = ar.pop()
+    new_name = ""
+    for e in ar:
+        new_name += e + '.' if e != ar[-1] else e
+    new_name = f"{new_name}_{instance.id}.{ext}"
+    return "images/" + new_name
+
 # Create your models here.
 class PostModel(models.Model):
     post_title = models.CharField(max_length=200)
@@ -12,6 +21,7 @@ class PostModel(models.Model):
     post_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name="postname")
     # post_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="postname")
     post_description = models.TextField()
+    # post_content = models.ImageField(upload_to=get_file_name)
     post_content = models.ImageField(upload_to='images/')
     post_date = models.DateTimeField(auto_now_add=True)
     post_updated_date = models.DateTimeField(default=timezone.now)
@@ -28,6 +38,8 @@ class PostModel(models.Model):
     @property
     def like_count(self):
         return self.post_likes.count()
+    
+
 
 
 # class PostLikes(models.Model):

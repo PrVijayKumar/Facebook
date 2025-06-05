@@ -4,7 +4,8 @@ from .models import PostModel, PostComments
 # from .models import PostModel, PostLikes, PostComments
 from django.utils import timezone
 import logging
-
+import os
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +19,21 @@ def pre_save_post(sender, instance, **kwargs):
 # post save method
 @receiver(post_save, sender=PostModel)
 def post_save_post(sender, instance, created, **kwargs):
+	# breakpoint()
 	if created:
 		logger.info(f"Post with title: {instance.post_title} successfully created by {instance.post_user.username} at '{timezone.now()}'")
+		old_path = instance.post_content.path
+		filename = instance.post_content.name
+		ar = filename.split('.')
+		ext = ar.pop()
+		new_name = ""
+		for e in ar:
+			new_name += e + '.' if e != ar[-1] else e
+		instance.post_content.name = f"{new_name}_{instance.id}.{ext}"
+		# instance.post_content.path = settings.MEDIA_ROOT + '/' + instance.post_content.name	# cannot set path property of ImageFieldFile
+		new_path = settings.MEDIA_ROOT + '/' + instance.post_content.name	# cannot set path property of ImageFieldFile
+		os.rename(old_path, new_path)	# moving the file to a new path
+		instance.save()
 	else:
 		logger.info(f"Post with title: {instance.post_title} by {instance.post_user.username} successfully updated at '{timezone.now()}'")
 

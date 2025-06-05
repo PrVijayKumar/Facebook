@@ -95,7 +95,10 @@ def create_post(request):
                     post_user=request.user
                 )
             print(request.user)
+            breakpoint()
             obj.save()
+            # obj.post_content = content
+            # obj.save()
             messages.success(request, 'Post sent successfully.')
             # logger message for new post creation
             logger.info(f"New post with title: {obj.post_title} created by user: {request.user.username} on {timezone.now()}")
