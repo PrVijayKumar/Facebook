@@ -112,7 +112,7 @@ class PostSerializer(serializers.ModelSerializer):
     pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
     post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
     is_liked = serializers.SerializerMethodField()
-    post_content = Base64OrImageField(required=False)
+    post_content = Base64OrImageField(required=True)
     # like_count = serializers.SerializerMethodField()
     # likes = serializers.PrimaryKeyRelatedField(many=True, queryset=PostLikes.objects.all(), source='post_likes')
 

@@ -1,5 +1,5 @@
 import logging
-import geoip2.database
+# import geoip2.database
 logger = logging.getLogger(__name__)
 from django.contrib.gis.geoip2 import GeoIP2
 

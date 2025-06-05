@@ -55,7 +55,7 @@ from post.models import PostModel
 from post.serializers import PostSerializer, CommentSerializer
 from django.views.decorators.csrf import csrf_exempt
 from user.forms import UserCreationForm
-from user.serializers import UserSerializer, UserRegisterSerializer
+from user.serializers import UserSerializer, UserRegisterSerializer, AdminSerializer
 from rest_framework.authtoken.models import Token
 
 from django.http import HttpResponse, JsonResponse
@@ -326,18 +326,33 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 logger = logging.getLogger(__name__)
 
 
-class UserPermissions(IsAuthenticated):
+class UserPermissions(BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'POST':
+        # breakpoint()
+        if request.method == 'POST' and not request.user.is_staff:
             return request.user.is_staff
-        elif request.method == 'GET':
+        else:
             return request.user.is_authenticated
+    
+    def has_object_permission(self, request, view, obj):
+        # breakpoint()
+        if request.method in permissions.SAFE_METHODS:
+            return request.user.id == obj.id or request.user.is_staff  # need to modify so can see own stuff
+        elif request.method == 'PATCH':
+            return request.user.id == obj.id or request.user.is_staff
+        elif request.method == 'DELETE':
+            # logger.info(f"{request.user.username} deleted the post with title: {obj.post_title} at {timezone.now()}")
+            return request.user.id == obj.id or request.user.is_staff
+        elif request.method == 'PUT':
+            # logger.info(f"{request.user.username} successfully updated the post at {timezone.now()}")
+            return request.user.id == obj.id or request.user.is_staff
+        return request.user.id == obj.id  # need to modify so can see own stuff
 
 
 class UserModelViewSet(viewsets.ModelViewSet):
     # http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     # queryset = User.objects.all()
-    serializer_class = UserSerializer
+    # serializer_class = UserSerializer
     # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
     permission_classes = [UserPermissions]
@@ -345,6 +360,13 @@ class UserModelViewSet(viewsets.ModelViewSet):
     search_fields = ['username']
     throttle_classes = [AnonRateThrottle]
     pagination_class = MyCursorPagination
+
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return AdminSerializer
+        else:
+            return UserSerializer
 
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:

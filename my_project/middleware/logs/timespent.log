@@ -9,3 +9,9 @@ User with username: jay
 	 from 2025-06-03 14:00:17.905586+00:00 to 2025-06-03 14:00:32.777457+00:00
 
 
+INFO my_project.middleware.timespent 36 "2025-06-04 11:01:11,943" /home/thoughtwin/vijay/facebook/my_project/my_project/middleware/timespent.py timespent __call__ timespent.py 
+ ----User with username: jay 
+	 spent 0 days, 0 hours, 3 minutes, 34 seconds 
+	 from 2025-06-04 05:27:37.637616+00:00 to 2025-06-04 05:31:11.943270+00:00
+
+

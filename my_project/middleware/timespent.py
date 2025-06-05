@@ -33,7 +33,7 @@ class TimeSpentMiddleware:
             hours = diff.seconds // 3600
             minutes = ((diff.seconds) - (hours * 3600)) // 60
             seconds = (diff.seconds) - (hours * 3600) - (minutes * 60)
-            logger.info(f"\n----User with username: {request.user.username} \n\t spent {days} days, {hours} hours, {minutes} minutes, {seconds} seconds \n\t from {request.user.last_login} to {timezone.now()}\n\n")
+            logger.info(f"\n ----User with username: {request.user.username} \n\t spent {days} days, {hours} hours, {minutes} minutes, {seconds} seconds \n\t from {request.user.last_login} to {timezone.now()}\n\n")
 
         response = self.get_response(request)
         return response

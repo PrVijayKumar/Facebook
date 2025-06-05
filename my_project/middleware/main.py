@@ -31,8 +31,8 @@ class MyMiddleware:
         logger.warning(f"Response status: {response.status_code} for {method} {path} took {duration:.2f} seconds")
         # user_agent = request.META.get('HTTP_USER_AGENT')
 
-        print("###")
+        # print("###")
         # print(user_agent)
         # print(logger)
-        print("###")
+        # print("###")
         return response

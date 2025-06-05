@@ -1,14 +1,55 @@
 from rest_framework import serializers
+from django.utils import timezone
 # from .models import User
 from .models import CustomUser
 from post.serializers import PostSerializer
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.hashers import make_password
 import re
+
+
+
 
 class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True, source='postname')
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts', 'password', 'contact']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'posts', 'password', 'contact', 'dob']
+        write_only_fields = ['first_name', 'last_name']
+        extra_kwargs = {
+            'first_name': {'write_only': True},
+            'last_name': {'write_only': True},
+            'password': {'write_only': True},
+            'contact': {'write_only': True},
+        }
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+        # raise serializers.ValidationError("Password does not meet the required criteria.")
+    
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        if password:
+            instance.set_password(password)
+        return super().update(instance, validated_data)
+    
+    # def update(self, instance, validated_data):
+    #     breakpoint()
+    #     password = validated_data.pop('password', None)
+    #     if password:
+    #         instance.set_password(password)
+    #     return super().update(instance, validated_data)
+
+class AdminSerializer(UserSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'posts', 'password', 'contact', 'dob']
         write_only_fields = ['is_staff', 'first_name', 'last_name']
         extra_kwargs = {
             'is_staff': {'write_only': True},
@@ -17,7 +58,6 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
             'contact': {'write_only': True},
         }
-
 # accounts/serializers.py
 
 
@@ -25,22 +65,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     re_password = serializers.CharField(max_length=20)
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 're_password', 'contact']
+        fields = ['id', 'username', 'first_name', 'last_name', 'dob', 'email', 'password', 're_password', 'contact']
         extra_kwargs = {
             'password': {'write_only': True},
             're_password': {'write_only': True}
         }
 
     def create(self, validated_data):
-        # breakpoint()
+        if 'contact' not in validated_data:
+            validated_data['contact'] = None
         
         if ('first_name' in validated_data and 'last_name' in validated_data):
             # user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
-            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'], username = validated_data['username'], contact = validated_data['contact'])
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'], username = validated_data['username'], contact = validated_data['contact'], dob=validated_data['dob'])
         elif ('first_name' in validated_data and 'last_name' not in validated_data):
-            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], username = validated_data['username'], contact = validated_data['contact'])
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], username = validated_data['username'], contact = validated_data['contact'], dob=validated_data['dob'])
         else:
-            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], username=validated_data['username'], contact = validated_data['contact'])
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], username=validated_data['username'], contact = validated_data['contact'], dob=validated_data['dob'])
         return user
 
 
@@ -75,6 +116,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Password must contain Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.")
         if value != self.initial_data['re_password']:
             raise serializers.ValidationError("Passwords does not match")
+        return value
+    
+
+    def validate_contact(self, value):
+        # breakpoint()
+        if value == "" or value is None:
+            raise serializers.ValidationError("Contact number cannot be empty")
+        return value
+    
+    def validate_dob(self, value):
+        if value is not None and value > timezone.now().date():
+            raise serializers.ValidationError("Date of Birth cannot be in the future")
         return value
 
 

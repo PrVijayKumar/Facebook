@@ -15,7 +15,8 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=32, unique=True)
     email = models.EmailField(_("email address"))
     contact = models.CharField(max_length=20, null=True)
-    dob = models.DateField(null=True)
+    dob = models.DateField()
+    # dob = models.DateField(null=True)
     updated_at = models.DateTimeField(default=timezone.now)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
@@ -25,7 +26,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-
+    def clean_dob(self):
+        if self.is_superuser is True and self.dob is None:
+            self.dob = "1980-01-01"
+            return self.dob
+        return self.dob
 
     def get_absolute_url(self):
         return f'/user/{self.id}/'
