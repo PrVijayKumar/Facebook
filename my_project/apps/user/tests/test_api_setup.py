@@ -23,7 +23,8 @@ class TestSetUp(APITestCase):
             'email': self.fake.email(),
             'password': 'Test@12345',
             're_password': 'Test@12345',
-            'contact': '1234569870'
+            'contact': '1234569870',
+            'dob': self.fake.date_of_birth()
         }
         return super().setUp()
     

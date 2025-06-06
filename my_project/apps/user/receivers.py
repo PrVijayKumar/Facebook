@@ -39,7 +39,7 @@ def log_out(sender, request, user, **kwargs):
 @receiver(user_login_failed)
 def login_failed(sender, credentials, request, **kwargs):
 	if request is not None:
-		signals.request_by_user.send(sender=CustomUser, username=credentials['username'],request=request)
+		signals.request_by_user.send(sender=CustomUser, username=credentials['username'], request=request)
 	print('reached')
 	logger.warning(f"Anonymous user with credentials: '{credentials}' was restricted from logging in at '{timezone.now()}'")
 
@@ -96,7 +96,8 @@ def sd_post(sender, user, **kwargs):
 		post = PostModel.objects.create(
 				post_title="Dummy Post",
 				post_description="This is a Dummy Post",
-				post_content="images/yellowcar.webp",
+				post_content="demo/yellowcar.webp",
 				post_user=user
 			)
+		# breakpoint()
 		# post.save()

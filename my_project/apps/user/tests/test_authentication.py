@@ -122,6 +122,7 @@ class LogInTest(TestCase):
 	# @patch('django.contrib.auth.authenticate')
 	@patch('user.views.authenticate')
 	def test_login(self, mock_authenticate):
+		# breakpoint()
 		mock_authenticate.return_value = None
 		# response = self.client.post(reverse('user:login-page'), {'assertion': 'assert this'})
 		# mock_authenticate.assert_called_once_with(assertion='assert this')
@@ -150,6 +151,7 @@ class LogInTest(TestCase):
 	# test to check logged in session if authenticate returns a user
 	@patch('user.views.authenticate')
 	def test_gets_logged_in_session_if_authenticate_returns_user(self, mock_authenticate):
+		# breakpoint()
 		user = self.user
 		user.backend = ''
 		mock_authenticate.return_value = user
@@ -179,6 +181,7 @@ class LogInTest(TestCase):
 		request.method = 'POST'
 		mock_user = mock_authenticate.return_value
 		login(request)
+		mock_authenticate.assert_called_once_with(username=self.credentials['username'], password=self.credentials['password'])
 		mock_login.assert_called_once_with(request, mock_user)
 
 

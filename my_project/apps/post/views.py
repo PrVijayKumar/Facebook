@@ -95,10 +95,10 @@ def create_post(request):
                     post_user=request.user
                 )
             print(request.user)
-            breakpoint()
+            # breakpoint()
             obj.save()
-            # obj.post_content = content
-            # obj.save()
+            obj.post_content = content
+            obj.save()
             messages.success(request, 'Post sent successfully.')
             # logger message for new post creation
             logger.info(f"New post with title: {obj.post_title} created by user: {request.user.username} on {timezone.now()}")
@@ -181,39 +181,43 @@ def my_posts(request):
 
 def friend_posts(request):
     context = {}
-    stars = Stars.objects.filter(user_id=request.user.id)
-    nos = 0
-    if not stars:
-        new_star = Stars.objects.create(user=request.user)
-        new_star.save()
+    if request.user.is_authenticated:
+        stars = Stars.objects.filter(user_id=request.user.id)
+        nos = 0
+        if not stars:
+            new_star = Stars.objects.create(user=request.user)
+            new_star.save()
+        else:
+            new_star = Stars.objects.get(user_id=request.user)
+            nos = new_star.amount
+        ulikes = []
+        c_user = request.user
+        posts = PostModel.objects.all().exclude(post_user=c_user.id).order_by('-post_date')
+        # likes = PostLikes.objects.filter(liked_by=request.user.id)
+        # if likes:
+        #     for like in likes:
+        #         ulikes.append(like.post_id_id)
+        liked_posts = c_user.liked_posts.all()  # Get all posts liked by the user
+        if liked_posts:
+            for p in liked_posts:
+                ulikes.append(p.id)
+        paginator = Paginator(posts, 5)
+        page_number = request.GET.get('page')
+        PostsFinal = paginator.get_page(page_number)
+        totalpages = PostsFinal.paginator.num_pages #3
+        # context['posts'] = posts
+        context = {
+            # 'posts': posts,
+            'posts': PostsFinal,
+            'lastpage': totalpages,
+            'totalPageList': [n+1 for n in range(totalpages)],
+            'nos': nos,
+            'likes': ulikes,
+        }
+        return render(request, 'post/friends_post.html', context)
     else:
-        new_star = Stars.objects.get(user_id=request.user)
-        nos = new_star.amount
-    ulikes = []
-    c_user = request.user
-    posts = PostModel.objects.all().exclude(post_user=c_user.id).order_by('-post_date')
-    # likes = PostLikes.objects.filter(liked_by=request.user.id)
-    # if likes:
-    #     for like in likes:
-    #         ulikes.append(like.post_id_id)
-    liked_posts = c_user.liked_posts.all()  # Get all posts liked by the user
-    if liked_posts:
-        for p in liked_posts:
-            ulikes.append(p.id)
-    paginator = Paginator(posts, 5)
-    page_number = request.GET.get('page')
-    PostsFinal = paginator.get_page(page_number)
-    totalpages = PostsFinal.paginator.num_pages #3
-    # context['posts'] = posts
-    context = {
-        # 'posts': posts,
-        'posts': PostsFinal,
-        'lastpage': totalpages,
-        'totalPageList': [n+1 for n in range(totalpages)],
-        'nos': nos,
-        'likes': ulikes,
-    }
-    return render(request, 'post/friends_post.html', context)
+        return render(request, 'post/friends_post.html', context)
+
 
 
 # def edit_posts(request, id):

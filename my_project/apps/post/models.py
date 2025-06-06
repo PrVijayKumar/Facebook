@@ -4,15 +4,36 @@ from user.models import CustomUser
 # from user.models import User
 from django.utils import timezone
 import datetime
+from django.conf import settings
+import os
 
 def get_file_name(instance, filename):
+    if instance.id is None:
+        old_path = instance.post_content.path
+    else:
+        old_path = PostModel.objects.get(id=instance.id).post_content.path
+    filename = instance.post_content.name
     ar = filename.split('.')
     ext = ar.pop()
     new_name = ""
     for e in ar:
         new_name += e + '.' if e != ar[-1] else e
-    new_name = f"{new_name}_{instance.id}.{ext}"
-    return "images/" + new_name
+    instance.post_content.name = f"{new_name}_{instance.id}.{ext}"
+    if os.path.exists(old_path):
+        new_path = settings.MEDIA_ROOT + '/' + instance.post_content.name	# cannot set path property of ImageFieldFile
+        os.rename(old_path, new_path)	# moving the file to a new path)
+    return f"images/{instance.post_content.name}"
+    # ar = filename.split('.')
+    # ext = ar.pop()
+    # new_name = ""
+    # for e in ar:
+    #     new_name += e + '.' if e != ar[-1] else e
+    # new_name = f"{new_name}_{instance.id}.{ext}"
+    # return "images/" + new_name
+    # breakpoint()
+    # instance.post_content.path = settings.MEDIA_ROOT + '/' + instance.post_content.name	# cannot set path property of ImageFieldFile
+        # breakpoint()
+    # instance.save()
 
 # Create your models here.
 class PostModel(models.Model):
@@ -22,7 +43,7 @@ class PostModel(models.Model):
     # post_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="postname")
     post_description = models.TextField()
     # post_content = models.ImageField(upload_to=get_file_name)
-    post_content = models.ImageField(upload_to='images/')
+    post_content = models.ImageField(upload_to=get_file_name)
     post_date = models.DateTimeField(auto_now_add=True)
     post_updated_date = models.DateTimeField(default=timezone.now)
     # post_likes = models.ManyToManyField(CustomUser, through='PostLikes', related_name="liked_posts")

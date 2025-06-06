@@ -83,6 +83,9 @@ from django.utils import timezone
 from rest_framework.decorators import action
 # from .custompermission import MyPermission
 from django.shortcuts import get_object_or_404
+# import functools
+from functools import wraps
+
 
 # swagger imports
 # from rest_framework.generics import GenericAPIView
@@ -255,6 +258,37 @@ class PostModelPermissions(BasePermission):
     # pass
 
 
+# def custom_decorator(arg=None):
+#     def decorator(f):
+#         @functools.wraps(f)
+#         def wrapper(*args, **kwargs):
+#             # breakpoint()
+#             post = args[0].get_object()
+#             user = args[1].user
+#             f.kwargs = kwargs
+#             if post.post_likes.filter(id=user.id).exists():
+#                 # f.__name__ = "like post"
+#                 f.kwargs['name'] = "like_post"
+#             else:
+#                 # f.__name__ = "unlike post"
+#                 f.kwargs['name'] = "unlike_post"
+#             return f
+#         return wrapper
+#     return decorator if arg is None else decorator(arg)
+        
+
+
+# def custom_decorator():
+#     def decorator(func):
+#         @wraps(func)
+#         def wrapper(*args, **kwargs):
+#             # if condition():
+#             func.__name__ = 'new_function_name'
+#             return func(*args, **kwargs)
+#         return wrapper
+#     return decorator
+
+
 class PostModelViewSet(viewsets.ModelViewSet):
     # http_method_names = ['get', 'post', 'patch', 'put', 'delete']
     # queryset = PostModel.objects.all()
@@ -268,7 +302,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     # pagination_class = LimitOffsetPagination
 
     # @action(detail=True, methods=['post'], url_path='like', url_name='like-post')
-    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    # @action(detail=True, methods=['post', 'get'], name="like" if self.get_object().post_likes.filter(id=user.id).exists() else , permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post', 'get'], name="Like/Unlike", permission_classes=[IsAuthenticated])
     def like_post(self, request, pk=None):
         post = self.get_object()
         user = request.user

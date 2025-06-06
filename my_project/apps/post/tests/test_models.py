@@ -36,7 +36,8 @@ class PostModelTest(TestCase):
 		self.assertEqual(self.post.post_description, "This post is created for testing purpose.")
 		self.assertEqual(self.post.post_content, "images/yellowcar.webp")
 		self.assertEqual(str(self.post.post_date.date()), str(timezone.now().date()))
-		self.assertEqual(self.post.post_likes, 0)
+		# self.assertEqual(self.post.post_likes, 0)	# made changes in ManyToManyField()
+		self.assertEqual(self.post.like_count, 0)
 
 
 
@@ -76,7 +77,7 @@ class PostCommentTest(TestCase):
 			post_content="images/yellowcar.webp")
 		cls.comment = PostComments.objects.create(comment_desc="Test Comment", post=cls.post, com_user=cls.user)
 		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user,
-			reply_on_comment=cls.comment.id)
+			reply_on_comment=cls.comment)
 
 
 	# test the model creation
@@ -101,7 +102,7 @@ class PostCommentTest(TestCase):
 		self.assertEqual(self.reply.com_user_id, self.user.id)
 		self.assertEqual(str(self.reply.com_date.date()), str(timezone.now().date()))
 		self.assertEqual(self.reply.com_reply_id, self.comment.com_user_id)
-		self.assertEqual(self.reply.reply_on_comment, self.comment.id)
+		self.assertEqual(self.reply.reply_on_comment.id, self.comment.id)
 		self.assertEqual(str(self.reply.updated_at.date()), str(timezone.now().date()))
 
 
@@ -159,7 +160,7 @@ class PostLikesTest(TestCase):
 	def test_post_likes_data(self):
 		self.post.post_likes.add(self.user)
 		self.assertEqual(self.post.id, self.post.id)
-		self.assertEqual(self.post_likes.filter(id=self.user.id).exists(), True)
+		self.assertEqual(self.post.post_likes.filter(id=self.user.id).exists(), True)
 		# self.assertEqual(str(self.like.created_at.date()), str(timezone.now().date()))
 		# self.assertEqual(str(self.like.updated_at.date()), str(timezone.now().date()))
 

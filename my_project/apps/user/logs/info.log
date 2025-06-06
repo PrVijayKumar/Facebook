@@ -566,3 +566,14 @@ WARNING 228 "2025-05-22 18:01:42,200" views.py User enterered wrong username:sha
 INFO 137 "2025-05-29 18:34:47,979" views.py New account created for user:jay on 2025-05-29 13:04:47.979238+00:00
 WARNING 229 "2025-06-03 18:15:32,303" views.py User enterered wrong username:vijay and password:@@123456
 INFO 138 "2025-06-04 18:47:08,169" views.py New account created for user:fbuser on 2025-06-04 13:17:08.169215+00:00
+WARNING 229 "2025-06-05 19:29:18,377" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-05 19:29:23,125" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+INFO 138 "2025-06-05 19:29:34,027" views.py New account created for user:testusername on 2025-06-05 13:59:34.027886+00:00
+INFO 138 "2025-06-05 19:30:27,206" views.py New account created for user:testusername on 2025-06-05 14:00:27.206924+00:00
+WARNING 229 "2025-06-05 19:31:01,009" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-05 19:31:06,614" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-05 19:33:25,368" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-05 19:34:35,693" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-06 11:38:03,394" views.py User enterered wrong username:shah@gmail.com and password:@@123456
+WARNING 229 "2025-06-06 17:20:32,302" views.py User enterered wrong username:jay@gmail.com and password:123
+WARNING 229 "2025-06-06 17:21:15,729" views.py User enterered wrong username:jay@gmail.com and password:123

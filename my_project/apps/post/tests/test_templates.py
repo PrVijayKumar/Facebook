@@ -22,7 +22,7 @@ class AllPostsPageTest(TestCase):
 		self.assertContains(response, '<h1>You are not Logged In !!!</h1>')
 
 
-class FriendPostsPageTest(SimpleTestCase):
+class FriendPostsPageTest(TestCase):
 
 	def test_url_exists_at_correct_location(self):
 		response = self.client.get('/post/fposts/')

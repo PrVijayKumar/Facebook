@@ -46,20 +46,35 @@ class AllPostsTest(TestCase):
 		self.assertEqual(response.status_code, 200)
 
 
+
+	# test url exists at correct location
+	def test_url_exists_at_correct_location_when_log_in(self):
+		self.client.login(username=self.credentials['username'], password=self.credentials['password'])
+		response = self.client.get("/allposts/")
+		self.assertEqual(response.status_code, 200)
+
 	# test url available by name
 	def test_url_available_by_name(self):
 		response = self.client.get(reverse('user:apost'))
-		self.assertEqual(response.status_code, 200)		
+		self.assertEqual(response.status_code, 200)
+
+
+	# test url available by name when logged in
+	def test_url_available_by_name_when_logged_in(self):
+		self.client.login(username=self.credentials['username'], password=self.credentials['password'])
+		response = self.client.get(reverse('user:apost'))
+		self.assertEqual(response.status_code, 200)
 
 
 	# test template name correct
 	def test_template_name_correct(self):
+		self.client.login(username=self.credentials['username'], password=self.credentials['password'])
 		response = self.client.get(reverse('user:apost'))
 		self.assertTemplateUsed(response, 'user/allposts.html')
 
 	# test template name correct with post request
 	def test_template_name_correct_with_post_request(self):
-
+		self.client.login(username=self.credentials['username'], password=self.credentials['password'])
 		response = self.client.post(reverse('user:apost'))
 		self.assertTemplateUsed(response, 'user/allposts.html')
 
@@ -372,7 +387,8 @@ class DashboardViewTest(TestCase):
 	def test_dashboard_with_post_request_not_logged_in_follow_redirect_posts_likes(self):
 		post = PostModel.objects.create(post_title="Test Post", post_user=self.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		like = PostLikes.objects.create(post_id=post, liked_by=self.user)
+		# like = PostLikes.objects.create(post_id=post, liked_by=self.user)
+		post.post_likes.add(self.user)
 		self.client.login(username=self.user.username, password="@@123456")
 		response = self.client.post(reverse('user:dashboard'), follow=True)
 		self.assertEqual(response.status_code, 200)

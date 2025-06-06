@@ -11,6 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 # from PIL import Image
 import json
 from post.models import PostComments, PostModel
+from api_views.views import PostModelViewSet
 # from post.models import PostComments, PostModel, PostLikes
 # import base64
 # from io import BytesIO
@@ -38,12 +39,14 @@ class TestPostAPIViews(APITestCase):
             'first_name': fake.first_name(),
             'last_name': fake.last_name(),
             'email': fake.email(),
+            'dob': fake.date_of_birth(),
             'password': 'Test@12345',
             're_password': 'Test@12345',
             'contact': '1234569870'
         }
         cls.client.post(reverse('create_apiuser'), cls.user_data, format="json")
         cls.user = CustomUser.objects.get(username=cls.user_data['username'])
+        # cls.user = CustomUser.objects.create(**{k: v for k, v in cls.user_data.items() if k != 're_password'})
         cls.post_data = {
                     'post_title': fake.name(),
                     # 'post_user_id': self.user.id,
@@ -135,24 +138,36 @@ class TestPostAPIViews(APITestCase):
         # with open(path, "rb") as myimg:
         #     image_data = base64.b64encode(myimg.read()).decode('utf-8')
         self.post_data['post_content'] = f
-
+        # breakpoint()
+        # request = self.factory.post(reverse("post-list"), data=json.dumps(self.post_data), format="multipart")
+        # request.user = self.user
         res = self.client.post(reverse("post-list"), self.post_data, format="multipart")
-        res_content = json.loads(res.content)
-        print(res_content['id'])
+        # res = PostModel.objects.create(**self.post_data, post_user=self.user)
+        # print(res.id)
+        # res_content = json.loads(res.content)
+        print(res.data['id'])
 
         # modify data
         self.post_data = {
             'post_title': 'updated title',
             'post_description': 'updated description',
         }
-        up_post = PostModel.objects.get(id=res_content['id'])
-        breakpoint()
-        response = self.factory.patch(reverse("post-detail", kwargs={'pk': res_content['id']}), data = json.dumps(self.post_data), content_type="application/json")
-        
-        print(PostModel.objects.count())
+        # up_post = PostModel.objects.get(id=res_content['id'])
+        up_post = PostModel.objects.get(id=res.data['id'])
+        # breakpoint()
+        # response = self.factory.patch(
+        #     reverse("post-detail", kwargs={'pk': res_content['id']}),
+        #     data=json.dumps(self.post_data), content_type="application/json")
+        request = self.factory.patch(
+            reverse("post-detail", kwargs={'pk': res.data['id']}),
+            data=json.dumps(self.post_data), content_type="application/json")
+        request.user = self.user
+        response = PostModelViewSet.as_view({'patch': 'partial_update'})(request, pk=res.data['id'])
+        # print(PostModel.objects.count())
         up_post.refresh_from_db()
         # print("checking response", response.__dict__)
-        self.assertEqual(up_post.post_title,'updated title')
+        self.assertEqual(up_post.post_title, 'updated title')
+        self.assertEqual(response.data['post_description'], 'updated description')
         # assert response.REQUEST_METHOD == 'PUT'
 
 
@@ -176,11 +191,13 @@ class TestPostAPIViews(APITestCase):
             'post_title': 'updated title',
             'post_description': 'updated description'
         }
-
-        response = self.client.patch(reverse("post-detail", kwargs={'pk': res_content['id']}), self.post_data, content_type="application/json")
+        request = self.factory.patch(reverse('post-detail', kwargs={'pk': res_content['id']}), data=json.dumps(self.post_data), content_type="application/json")
+        request.user = suser
+        response = PostModelViewSet.as_view({'patch': 'partial_update'})(request, pk=res_content['id'])
+        # response = self.client.patch(reverse("post-detail", kwargs={'pk': res_content['id']}), self.post_data, content_type="application/json")
         # response = self.client.get(reverse("post-list"), format="json")
         print(response)
-        assert response.status_code == 201
+        assert response.status_code == 200
     
         # files = {'post_content': f}
         # print(image_data)

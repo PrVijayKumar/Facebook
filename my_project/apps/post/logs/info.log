@@ -1578,3 +1578,47 @@ INFO 104 "2025-06-05 19:13:57,257" views.py New post with title: vijay's post cr
 INFO 104 "2025-06-05 19:14:34,960" views.py New post with title: jai shree krishnaa created by user: jay on 2025-06-05 13:44:34.960061+00:00
 INFO 104 "2025-06-05 19:16:20,143" views.py New post with title: jai jai jai shree ram created by user: jay on 2025-06-05 13:46:20.143398+00:00
 WARNING 279 "2025-06-05 19:16:41,011" views.py Post with title: vijay's post deleted by user: jay on 2025-06-05 13:46:41.011880+00:00
+INFO 376 "2025-06-06 10:38:51,305" views.py Post with title: jai jai jai shree ram successfully edited by user: jay on <function now at 0x7f385e975a80>
+INFO 376 "2025-06-06 10:39:12,840" views.py Post with title: jai shree krishnaa successfully edited by user: jay on <function now at 0x7f385e975a80>
+INFO 376 "2025-06-06 10:42:27,922" views.py Post with title: jai shree krishnaa successfully edited by user: jay on <function now at 0x7f2482c85a80>
+INFO 376 "2025-06-06 10:42:54,709" views.py Post with title: jai shree krishnaa successfully edited by user: jay on <function now at 0x7efe126e1a80>
+INFO 376 "2025-06-06 10:45:44,576" views.py Post with title: jai jai jai shree ram successfully edited by user: jay on <function now at 0x7f601d4d9a80>
+INFO 376 "2025-06-06 10:47:03,468" views.py Post with title: jai jai jai shree ram successfully edited by user: jay on <function now at 0x7f73a437da80>
+INFO 376 "2025-06-06 10:55:36,913" views.py Post with title: jai jai jai shree ram successfully edited by user: jay on <function now at 0x7fea91ce1a80>
+INFO 104 "2025-06-06 11:16:53,801" views.py New post with title: jljlkjljlkjl created by user: jay on 2025-06-06 05:46:53.801384+00:00
+INFO 376 "2025-06-06 11:17:41,229" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7fa6c56a5a80>
+INFO 376 "2025-06-06 11:18:41,781" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7f6173655a80>
+INFO 376 "2025-06-06 11:19:52,247" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7f6173655a80>
+INFO 376 "2025-06-06 11:27:12,243" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7f5eb3ac9a80>
+INFO 376 "2025-06-06 11:27:51,994" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7f5eb3ac9a80>
+INFO 376 "2025-06-06 11:30:31,361" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7fbb0c905a80>
+INFO 104 "2025-06-06 11:31:12,903" views.py New post with title: what a shot created by user: jay on 2025-06-06 06:01:12.903241+00:00
+WARNING 279 "2025-06-06 11:32:47,172" views.py Post with title: vijay's post deleted by user: jay on 2025-06-06 06:02:47.171981+00:00
+WARNING 279 "2025-06-06 11:32:51,936" views.py Post with title: jai shree krishnaa deleted by user: jay on 2025-06-06 06:02:51.936243+00:00
+WARNING 279 "2025-06-06 11:32:52,167" views.py Post with title: jai shree krishnaa deleted by user: jay on 2025-06-06 06:02:52.167784+00:00
+INFO 376 "2025-06-06 17:22:39,095" views.py Post with title: what a shot successfully edited by user: jay on <function now at 0x7f20fe339a80>
+INFO 376 "2025-06-06 17:22:58,041" views.py Post with title: jljlkjljlkjl successfully edited by user: jay on <function now at 0x7f20fe339a80>
+WARNING 279 "2025-06-06 17:23:34,406" views.py Post with title: jai jai jai shree ram deleted by user: jay on 2025-06-06 11:53:34.406703+00:00
+INFO 475 "2025-06-06 19:32:27,373" views.py Shahrukh attempted to make comment using GET method.
+INFO 463 "2025-06-06 19:32:35,221" views.py Shahrukh commented on post: Test Post on 2025-06-06 14:02:35.221674+00:00
+WARNING 469 "2025-06-06 19:32:37,958" views.py Invalid comment passed on post: Test Post by user: Shahrukh on 2025-06-06 14:02:37.958877+00:00
+INFO 448 "2025-06-06 19:32:43,655" views.py Shahrukh replied on comment of Shahrukh on post: Test Post on 2025-06-06 14:02:43.654979+00:00
+INFO 104 "2025-06-06 19:32:55,632" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-06-06 14:02:55.632198+00:00
+INFO 104 "2025-06-06 19:33:00,456" views.py New post with title: Test Post created by user: Shahrukh on 2025-06-06 14:03:00.455989+00:00
+WARNING 580 "2025-06-06 19:33:15,025" views.py Shahrukh deleted comment: Test Comment
+WARNING 580 "2025-06-06 19:33:20,481" views.py Shahrukh deleted comment: Test Reply
+WARNING 283 "2025-06-06 19:33:28,310" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-06-06 14:03:28.310626+00:00
+WARNING 283 "2025-06-06 19:33:31,102" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-06-06 14:03:31.102803+00:00
+INFO 561 "2025-06-06 19:33:39,799" views.py Shahrukh made an attempt to edit comments through get request
+INFO 558 "2025-06-06 19:33:47,361" views.py Shahrukh edited the comment on 2025-06-06 14:03:47.361045+00:00
+INFO 561 "2025-06-06 19:33:50,102" views.py Shahrukh made an attempt to edit comments through get request
+INFO 558 "2025-06-06 19:33:52,954" views.py Shahrukh edited the comment on 2025-06-06 14:03:52.954469+00:00
+INFO 380 "2025-06-06 19:34:08,069" views.py Post with title: test updated successfully edited by user: Shahrukh on <function now at 0x7efd661999e0>
+INFO 315 "2025-06-06 19:34:51,655" views.py Post with title: Test Post liked by user: Shahrukh on 2025-06-06 14:04:51.655314+00:00
+WARNING 323 "2025-06-06 19:34:51,668" views.py Post with title: Test Post disliked by user: Shahrukh on 2025-06-06 14:04:51.668518+00:00
+INFO 315 "2025-06-06 19:35:02,315" views.py Post with title: Test Post liked by user: Shahrukh on 2025-06-06 14:05:02.315959+00:00
+INFO 104 "2025-06-06 19:41:43,956" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-06-06 14:11:43.956042+00:00
+INFO 104 "2025-06-06 19:42:46,168" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-06-06 14:12:46.168761+00:00
+INFO 104 "2025-06-06 19:43:18,148" views.py New post with title: Test Post created by user: Shahrukh on 2025-06-06 14:13:18.148330+00:00
+INFO 104 "2025-06-06 19:44:51,334" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-06-06 14:14:51.334826+00:00
+INFO 104 "2025-06-06 19:44:54,719" views.py New post with title: Test Post created by user: Shahrukh on 2025-06-06 14:14:54.719456+00:00

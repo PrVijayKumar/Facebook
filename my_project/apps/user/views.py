@@ -252,7 +252,8 @@ def dashboard(request):
     # likes = PostLikes.objects.filter(liked_by=request.user.id)
     # for like in likes:
     #     ulikes.append(like.post_id_id)
-    liked_posts = posts.post_likes.filter(id=request.user.id)
+    # liked_posts = posts.post_likes.filter(id=request.user.id)
+    liked_posts = PostModel.objects.filter(post_likes=request.user)
     for p in liked_posts:
         ulikes.append(p.id)
     # print(likes)
@@ -296,42 +297,47 @@ def dashboard(request):
 # @never_cache
 # @cache_page(60 * 10)
 def all_posts(request):
-    stars = Stars.objects.filter(user_id=request.user.id)
-    nos = 0
-    if not stars:
-        if isinstance(request.user, CustomUser):
-            new_star = Stars.objects.create(user=request.user)
-            new_star.save()
+    if request.user.is_authenticated:
+        stars = Stars.objects.filter(user_id=request.user.id)
+        nos = 0
+        if not stars:
+            if isinstance(request.user, CustomUser):
+                new_star = Stars.objects.create(user=request.user)
+                new_star.save()
+        else:
+            new_star = Stars.objects.get(user_id=request.user)
+            nos = new_star.amount
+        context = {}
+        ulikes = []
+        posts = PostModel.objects.all().order_by('-post_date')
+        # likes = PostLikes.objects.filter(liked_by=request.POST['user'])
+        # likes = PostLikes.objects.filter(liked_by=request.user.id)
+        # liked_posts = posts.post_likes.filter(id=request.user.id) # wrong code
+        # breakpoint()
+        liked_posts = PostModel.objects.filter(post_likes=request.user)
+        pages = Paginator(posts, 5)
+        page_number = request.GET.get("page")
+        page_obj = pages.get_page(page_number)
+        # if likes:
+        #     for like in likes:
+        #         ulikes.append(like.post_id_id)
+        if liked_posts:
+            for p in liked_posts:
+                ulikes.append(p.id)
+        # print(likes)
+        print(ulikes)
+        # context['posts'] = posts
+        # context['likes'] = likes
+        context = {
+            'posts': posts,
+            'likes': ulikes,
+            'page_obj': page_obj,
+            'total_pages': range(page_obj.paginator.num_pages),
+            'nos': nos
+        }
+        return render(request, 'user/allposts.html', context)
+        # return HttpResponse("Hello from all posts")
     else:
-        new_star = Stars.objects.get(user_id=request.user)
-        nos = new_star.amount
-    context = {}
-    ulikes = []
-    posts = PostModel.objects.all().order_by('-post_date')
-    # likes = PostLikes.objects.filter(liked_by=request.POST['user'])
-    # likes = PostLikes.objects.filter(liked_by=request.user.id)
-    # liked_posts = posts.post_likes.filter(id=request.user.id) # wrong code
-    liked_posts = PostModel.objects.filter(post_likes=request.user)
-    # breakpoint()
-    pages = Paginator(posts, 5)
-    page_number = request.GET.get("page")
-    page_obj = pages.get_page(page_number)
-    # if likes:
-    #     for like in likes:
-    #         ulikes.append(like.post_id_id)
-    if liked_posts:
-        for p in liked_posts:
-            ulikes.append(p.id)
-    # print(likes)
-    print(ulikes)
-    # context['posts'] = posts
-    # context['likes'] = likes
-    context = {
-        'posts': posts,
-        'likes': ulikes,
-        'page_obj': page_obj,
-        'total_pages': range(page_obj.paginator.num_pages),
-        'nos': nos
-    }
-    return render(request, 'user/allposts.html', context)
-    # return HttpResponse("Hello from all posts")
+        # return redirect('user:login-page')
+        context = {}
+        return render(request, 'user/allposts.html', context)

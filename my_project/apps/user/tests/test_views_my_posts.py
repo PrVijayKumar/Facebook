@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .models import PostModel, Stars
+from user.models import Stars
+from post.models import PostModel
+# from .models import PostModel, Stars
 # from .models import PostModel, Stars, PostLikes
 
 User = get_user_model()
@@ -9,7 +11,7 @@ User = get_user_model()
 class MyPostsViewTest(TestCase):
     def setUp(self):
         # Create a test user
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(username='testuser', email="test@gmail.com", password='testpassword', dob="2000-01-01")
         self.client = Client()
         self.client.login(username='testuser', password='testpassword')
 
@@ -32,7 +34,8 @@ class MyPostsViewTest(TestCase):
 
     def test_my_posts_view(self):
         # Send a GET request to the my_posts view
-        response = self.client.get(reverse('my_posts'))
+        response = self.client.get(reverse('post:mpost'))
+        # response = self.client.get(reverse('user:my_posts'))
 
         # Check if the response is successful
         self.assertEqual(response.status_code, 200)
@@ -53,6 +56,7 @@ class MyPostsViewTest(TestCase):
 
     def test_pagination(self):
         # Test the second page of posts
-        response = self.client.get(reverse('my_posts') + '?page=2')
+        response = self.client.get(reverse('post:mpost') + '?page=2')
+        # response = self.client.get(reverse('user:my_posts') + '?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['posts']), 5)  # Remaining 5 posts

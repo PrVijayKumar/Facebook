@@ -40,7 +40,7 @@ class PostTest(TestCase):
 		self.assertEqual(self.post.post_description, "This post is created for testing purpose.")
 		self.assertEqual(self.post.post_content, "images/yellowcar.webp")
 		self.assertEqual(str(self.post.post_date.date()), str(timezone.now().date()))
-		self.assertEqual(self.like_count, 1)
+		self.assertEqual(self.post.like_count, 1)
 		# self.assertEqual(self.post.post_likes, 0)
 
 
@@ -53,7 +53,7 @@ class PostTest(TestCase):
 	# test url available by name
 	def test_url_available_by_name(self):
 		response = self.client.get(reverse('user:apost'))
-		self.assertEqual(response.status_code, 200)		
+		self.assertEqual(response.status_code, 200)
 
 
 	# test template name correct

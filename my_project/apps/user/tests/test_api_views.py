@@ -55,7 +55,8 @@ class TestViews(TestSetUp):
             'email': self.user_data['email'],
             'password': 'Test@12345',
             're_password': 'Test@12345',
-            'contact': '1234569800'
+            'contact': '1234569800',
+            'dob': '1980-01-01'
         }, format="json")
         response_content = str(response.content, encoding='utf8')
         self.assertEqual(response_content, '{"email":["Email already exists"]}')
@@ -161,7 +162,8 @@ class TestViews(TestSetUp):
             'email': "testnewemail@gmail.com",
             'password': 'Test@12345',
             're_password': 'Test@12345',
-            'contact': '1234569870'
+            'contact': '1234569870',
+            'dob': '1980-01-01'
         }
         response = self.client.post(
             reverse("user-list"), new_user_data, format="json"
@@ -197,7 +199,8 @@ class TestViews(TestSetUp):
             'email': "testnewemail@gmail.com",
             'password': 'Test@12345',
             're_password': 'Test@12345',
-            'contact': '1234569870'
+            'contact': '1234569870',
+            "dob": '1980-01-01'
         }
         response = self.client.post(
             reverse("user-list"), new_user_data, format="json"
