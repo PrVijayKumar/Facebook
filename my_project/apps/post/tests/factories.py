@@ -1,7 +1,8 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from post.models import PostModel, PostLikes, PostComments
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostLikes, PostComments
 CustomUser = get_user_model()
 fake = Faker()
 
@@ -36,10 +37,10 @@ class PostCommentsFactory(factory.django.DjangoModelFactory):
     
 
 
-class PostLikesFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = PostLikes
+# class PostLikesFactory(factory.django.DjangoModelFactory):
+#     class Meta:
+#         model = PostLikes
 
-    post_id = factory.SubFactory(PostModelFactory)
-    liked_by = factory.SubFactory(CustomUserFactory)
+#     post_id = factory.SubFactory(PostModelFactory)
+#     liked_by = factory.SubFactory(CustomUserFactory)
 

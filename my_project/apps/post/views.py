@@ -3,7 +3,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .forms import PostForm, PostUpdateForm, CommentForm, ReplyForm
-from .models import PostModel, CustomUser as User, PostLikes, timezone, PostComments, PostStars  # , NotEqual, Field
+from .models import PostModel, CustomUser as User, timezone, PostComments, PostStars  # , NotEqual, Field
+# from .models import PostModel, CustomUser as User, PostLikes, timezone, PostComments, PostStars  # , NotEqual, Field
 # from .models import PostModel, CustomUser as User, PostLikes, timezone, PostComments, Stars, Price  # , NotEqual, Field
 # from .models import PostModel, User, PostLikes, timezone, PostComments  # , NotEqual, Field
 import json
@@ -138,13 +139,15 @@ def my_posts(request):
     totalpages = PostsFinal.paginator.num_pages  # Get the total number of pages
 
     # Fetch the posts liked by the current user
-    likes = PostLikes.objects.filter(liked_by_id=request.user.id)
+    # likes = PostLikes.objects.filter(liked_by_id=request.user.id)
+    liked_posts = c_user.liked_posts.all()  # Get all posts liked by the user
     ulikes = []  # Initialize an empty list to store liked post IDs
 
     # Add the IDs of liked posts to the list
-    for like in likes:
-        ulikes.append(like.post_id_id)
-
+    for p in liked_posts:
+        ulikes.append(p.id)
+    # for like in likes:
+    #     ulikes.append(like.post_id_id)
     print(ulikes)  # Debugging: Print the list of liked post IDs
 
     # Prepare the context dictionary with data to render in the template
@@ -186,10 +189,14 @@ def friend_posts(request):
     ulikes = []
     c_user = request.user
     posts = PostModel.objects.all().exclude(post_user=c_user.id).order_by('-post_date')
-    likes = PostLikes.objects.filter(liked_by=request.user.id)
-    if likes:
-        for like in likes:
-            ulikes.append(like.post_id_id)
+    # likes = PostLikes.objects.filter(liked_by=request.user.id)
+    # if likes:
+    #     for like in likes:
+    #         ulikes.append(like.post_id_id)
+    liked_posts = c_user.liked_posts.all()  # Get all posts liked by the user
+    if liked_posts:
+        for p in liked_posts:
+            ulikes.append(p.id)
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     PostsFinal = paginator.get_page(page_number)
@@ -289,32 +296,57 @@ def like_post(request, id):
         if request.method == "POST":
             fuser = User.objects.get(pk=request.POST['uid'])
             obj = PostModel.objects.get(pk=id)
-            likes = PostLikes()
-            print("working")
-            # breakpoint()
 
-            # likes = PostLikes.object.get()
             if int(request.POST['flag']) == 1:
-                obj.post_likes += 1
-                likes.liked_by = fuser
-                print(likes.liked_by)
-                likes.post_id = obj
+                obj.post_likes.add(fuser)
+                # obj.post_likes += 1
+                # likes.liked_by = fuser
+                # print(likes.liked_by)
+                # likes.post_id = obj
 
                 # logger for post like
                 logger.info(f"Post with title: {obj.post_title} liked by user: {request.user.username} on {timezone.now()}")
                 likes.save()
             else:
-                obj.post_likes -= 1
-                likes = PostLikes.objects.filter(post_id=id).filter(liked_by=fuser)
-                print(likes)
+                obj.post_likes.remove(fuser)
+                # obj.post_likes -= 1
+                # likes = PostLikes.objects.filter(post_id=id).filter(liked_by=fuser)
+                # print(likes)
                 # logger for post dislike
                 logger.warning(f"Post with title: {obj.post_title} disliked by user: {request.user.username} on {timezone.now()}")
                 likes.delete()
                 # likes.save()
-            obj.save()
+            # obj.save()
 
-            print(obj.post_likes)
-            return HttpResponse(obj.post_likes)
+            # print(obj.post_likes)
+
+            # likes = PostLikes()
+            # print("working")
+            # breakpoint()
+
+            # likes = PostLikes.object.get()
+            # if int(request.POST['flag']) == 1:
+            #     obj.post_likes += 1
+            #     likes.liked_by = fuser
+            #     print(likes.liked_by)
+            #     likes.post_id = obj
+
+            #     # logger for post like
+            #     logger.info(f"Post with title: {obj.post_title} liked by user: {request.user.username} on {timezone.now()}")
+            #     likes.save()
+            # else:
+            #     obj.post_likes -= 1
+            #     likes = PostLikes.objects.filter(post_id=id).filter(liked_by=fuser)
+            #     print(likes)
+            #     # logger for post dislike
+            #     logger.warning(f"Post with title: {obj.post_title} disliked by user: {request.user.username} on {timezone.now()}")
+            #     likes.delete()
+            #     # likes.save()
+            # obj.save()
+
+            # print(obj.post_likes)
+            # return HttpResponse(obj.post_likes)
+            return HttpResponse(obj.like_count)
         elif request.method == "GET":
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
     return redirect(reverse('user:login-page'))

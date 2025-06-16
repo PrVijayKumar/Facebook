@@ -5,7 +5,8 @@ from .forms import UserRegistrationForm, AuthenticationForm, ResetPassword #  , 
 from django.contrib.auth import  login as auth_login, logout as auth_logout, authenticate
 # from .customauth.CustomAuthentication import authenticate
 from django.contrib.auth.decorators import login_required
-from post.models import PostModel, PostLikes
+from post.models import PostModel
+# from post.models import PostModel, PostLikes
 from rest_framework import viewsets
 # from .serializers import UserHyperlinkedSerializer
 # from .models import User
@@ -248,13 +249,16 @@ def dashboard(request):
     ulikes = []
     posts = PostModel.objects.all().order_by('-post_date')
     # likes = PostLikes.objects.filter(liked_by=request.POST['user'])
-    likes = PostLikes.objects.filter(liked_by=request.user.id)
-    for like in likes:
-        ulikes.append(like.post_id_id)
+    # likes = PostLikes.objects.filter(liked_by=request.user.id)
+    # for like in likes:
+    #     ulikes.append(like.post_id_id)
+    liked_posts = posts.post_likes.filter(id=request.user.id)
+    for p in liked_posts:
+        ulikes.append(p.id)
     # print(likes)
     print(ulikes)
-    context['posts'] = posts
-    context['likes'] = likes
+    # context['posts'] = posts
+    # context['likes'] = likes
     context = {
         'posts': posts,
         'likes': ulikes,
@@ -305,18 +309,23 @@ def all_posts(request):
     ulikes = []
     posts = PostModel.objects.all().order_by('-post_date')
     # likes = PostLikes.objects.filter(liked_by=request.POST['user'])
-    likes = PostLikes.objects.filter(liked_by=request.user.id)
+    # likes = PostLikes.objects.filter(liked_by=request.user.id)
+    # liked_posts = posts.post_likes.filter(id=request.user.id) # wrong code
+    liked_posts = PostModel.objects.filter(post_likes=request.user)
     # breakpoint()
     pages = Paginator(posts, 5)
     page_number = request.GET.get("page")
     page_obj = pages.get_page(page_number)
-    if likes:
-        for like in likes:
-            ulikes.append(like.post_id_id)
+    # if likes:
+    #     for like in likes:
+    #         ulikes.append(like.post_id_id)
+    if liked_posts:
+        for p in liked_posts:
+            ulikes.append(p.id)
     # print(likes)
     print(ulikes)
-    context['posts'] = posts
-    context['likes'] = likes
+    # context['posts'] = posts
+    # context['likes'] = likes
     context = {
         'posts': posts,
         'likes': ulikes,

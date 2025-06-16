@@ -1,5 +1,6 @@
 import pytest
-from post.models import PostModel, PostComments, PostLikes
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostComments, PostLikes
 
 
 # def test_post(db, post_model_factory):

@@ -39,11 +39,16 @@ django-timezone-field==7.1
 djangorestframework==3.15.2
 djangorestframework_simplejwt==5.5.0
 dotenv==0.9.9
+drf-extra-fields==3.7.0
 drf-yasg==1.21.10
 environs==14.1.1
 factory_boy==3.3.3
 Faker==37.1.0
+filetype==1.2.0
 fontawesomefree==6.0.0
+gitdb==4.0.12
+gitdb2==4.0.2
+GitPython==3.0.6
 google==3.0.0
 google-api-core==2.24.2
 google-api-python-client==2.167.0
@@ -107,6 +112,7 @@ rsa==4.9.1
 ruff==0.11.7
 sentry-sdk==2.26.1
 six==1.17.0
+smmap==5.0.2
 social-auth-app-django==5.4.3
 social-auth-core==4.5.6
 soupsieve==2.6
@@ -114,6 +120,8 @@ sqlparse==0.5.3
 stripe==12.1.0
 testsolar-testtool-sdk==0.4.5
 tomlkit==0.13.2
+truffleHog==2.2.1
+truffleHogRegexes==0.0.7
 typing-inspection==0.4.0
 typing_extensions==4.13.2
 tzdata==2025.2

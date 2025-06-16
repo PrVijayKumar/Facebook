@@ -15,23 +15,30 @@ class PostModel(models.Model):
     post_content = models.ImageField(upload_to='images/')
     post_date = models.DateTimeField(auto_now_add=True)
     post_updated_date = models.DateTimeField(default=timezone.now)
-    post_likes = models.PositiveIntegerField(default=0)
+    # post_likes = models.ManyToManyField(CustomUser, through='PostLikes', related_name="liked_posts")
+    post_likes = models.ManyToManyField(CustomUser, related_name='liked_posts', blank=True)
+    # post_likes = models.ManyToManyField(default=0)
     post_stars = models.PositiveIntegerField(default=0)
     # post_likes = models.ManyToMany
 
     def __str__(self):
         return self.post_title
+    
+
+    @property
+    def like_count(self):
+        return self.post_likes.count()
 
 
-class PostLikes(models.Model):
-    post_id = models.ForeignKey(PostModel, on_delete=models.CASCADE)
-    liked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='cusers')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(default=timezone.now)
+# class PostLikes(models.Model):
+#     post_id = models.ForeignKey(PostModel, on_delete=models.CASCADE)
+#     liked_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='cusers')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(default=timezone.now)
     # liked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
 
-    def __str__(self):
-        return str(self.post_id)
+    # def __str__(self):
+    #     return str(self.post_id)
 # class NotEqual(Lookup):
 #     lookup_name = "ne"
 
@@ -54,7 +61,8 @@ class PostComments(models.Model):
     com_reply = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name="repliers", null=True)
     # com_reply = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="repliers", null=True)
     com_likes = models.PositiveIntegerField(default=0)
-    reply_on_comment = models.PositiveIntegerField(null=True)
+    # reply_on_comment = models.PositiveIntegerField(null=True)
+    reply_on_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
     # created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 

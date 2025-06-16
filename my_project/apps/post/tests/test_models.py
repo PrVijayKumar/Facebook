@@ -1,5 +1,6 @@
 from django.test import TestCase
-from post.models import PostModel, PostComments, PostLikes
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostComments, PostLikes
 from user.models import CustomUser
 from django.utils import timezone
 
@@ -52,7 +53,8 @@ class PostModelTest(TestCase):
 
 	# test post likes 
 	def test_post_likes(self):
-		likes = self.post.post_likes
+		# likes = self.post.post_likes
+		likes = self.post.like_count
 		self.assertEqual(likes, 0)
 
 
@@ -139,7 +141,7 @@ class PostLikesTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 
 
 	# set Up Function
@@ -149,24 +151,33 @@ class PostLikesTest(TestCase):
 
 	# test the model creation
 	def test_model_creation(self):
-		self.assertIsNotNone(self.like)
+		self.assertIsNotNone(self.post)
+		# self.assertIsNotNone(self.like)
 
 
 	# test to check the likes data
 	def test_post_likes_data(self):
-		self.assertEqual(self.like.post_id_id, self.post.id)
-		self.assertEqual(self.like.liked_by_id, self.user.id)
-		self.assertEqual(str(self.like.created_at.date()), str(timezone.now().date()))
-		self.assertEqual(str(self.like.updated_at.date()), str(timezone.now().date()))
+		self.post.post_likes.add(self.user)
+		self.assertEqual(self.post.id, self.post.id)
+		self.assertEqual(self.post_likes.filter(id=self.user.id).exists(), True)
+		# self.assertEqual(str(self.like.created_at.date()), str(timezone.now().date()))
+		# self.assertEqual(str(self.like.updated_at.date()), str(timezone.now().date()))
+
+	# test to check the likes data
+	# def test_post_likes_data(self):
+	# 	self.assertEqual(self.like.post_id_id, self.post.id)
+	# 	self.assertEqual(self.like.liked_by_id, self.user.id)
+	# 	self.assertEqual(str(self.like.created_at.date()), str(timezone.now().date()))
+	# 	self.assertEqual(str(self.like.updated_at.date()), str(timezone.now().date()))
 
 
 	# test to check the label
-	def test_post_likes_field_label(self):
-		post_id_label = self.like._meta.get_field('post_id').verbose_name
-		liked_by_label = self.like._meta.get_field('liked_by').verbose_name
-		created_at_label = self.like._meta.get_field('created_at').verbose_name
-		updated_at_label = self.like._meta.get_field('updated_at').verbose_name
-		self.assertEqual(post_id_label, "post id")
-		self.assertEqual(liked_by_label, "liked by")
-		self.assertEqual(created_at_label, "created at")
-		self.assertEqual(updated_at_label, "updated at")
+	# def test_post_likes_field_label(self):
+	# 	post_id_label = self.like._meta.get_field('post_id').verbose_name
+	# 	liked_by_label = self.like._meta.get_field('liked_by').verbose_name
+	# 	created_at_label = self.like._meta.get_field('created_at').verbose_name
+	# 	updated_at_label = self.like._meta.get_field('updated_at').verbose_name
+	# 	self.assertEqual(post_id_label, "post id")
+	# 	self.assertEqual(liked_by_label, "liked by")
+	# 	self.assertEqual(created_at_label, "created at")
+	# 	self.assertEqual(updated_at_label, "updated at")

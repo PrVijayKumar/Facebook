@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test.client import MULTIPART_CONTENT
-from post.models import PostModel, PostComments, PostLikes
+from post.models import PostModel, PostComments
+# from post.models import PostModel, PostComments, PostLikes
 from user.models import CustomUser
 from django.utils import timezone
 from django.urls import reverse
@@ -17,7 +18,8 @@ class PostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -38,7 +40,8 @@ class PostTest(TestCase):
 		self.assertEqual(self.post.post_description, "This post is created for testing purpose.")
 		self.assertEqual(self.post.post_content, "images/yellowcar.webp")
 		self.assertEqual(str(self.post.post_date.date()), str(timezone.now().date()))
-		self.assertEqual(self.post.post_likes, 0)
+		self.assertEqual(self.like_count, 1)
+		# self.assertEqual(self.post.post_likes, 0)
 
 
 	# test url exists at correct location
@@ -87,7 +90,8 @@ class CreatePostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -198,7 +202,8 @@ class MyPostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -281,7 +286,8 @@ class FriendsPostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -320,7 +326,8 @@ class DetailPostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -357,7 +364,8 @@ class DeletePostTest(TestCase):
 			dob="2000-04-29")
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
-		cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
+		cls.post.post_likes.add(cls.user)
+		# cls.like = PostLikes.objects.create(post_id=cls.post, liked_by=cls.user)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -720,7 +728,7 @@ class FetchCommentPostTest(TestCase):
 			post_content="images/yellowcar.webp")
 		cls.comment = PostComments.objects.create(comment_desc="Test Comment", post=cls.post, com_user=cls.user)
 		cls.comment2 = PostComments.objects.create(comment_desc="Test Comment2", post=cls.post, com_user=cls.user)
-		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment=cls.comment.id)
+		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment_id=cls.comment.id)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -835,7 +843,7 @@ class FetchReplyPostTest(TestCase):
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
 		cls.comment = PostComments.objects.create(comment_desc="Test Comment", post=cls.post, com_user=cls.user)
-		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment=cls.comment.id)
+		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment_id=cls.comment.id)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -893,7 +901,7 @@ class FetchReplyPostTest(TestCase):
 	# test fetch reply with post request for reply on reply
 	def test_fetch_reply_view_post_for_reply_on_reply(self):
 		self.client.login(username=self.credentials['username'], password="@@123456")
-		reply2 = PostComments.objects.create(comment_desc="Test Reply on Reply", post=self.post, com_user=self.user, com_reply=self.user, reply_on_comment=self.reply.id)
+		reply2 = PostComments.objects.create(comment_desc="Test Reply on Reply", post=self.post, com_user=self.user, com_reply=self.user, reply_on_comment_id=self.reply.id)
 		response = self.client.get(reverse("post:fr", kwargs={'id': self.comment.id}))
 		response_content = str(response.content, encoding='utf8')
 		self.assertEqual(response.status_code, 200)
@@ -915,7 +923,7 @@ class EditCommentPostTest(TestCase):
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
 		cls.comment = PostComments.objects.create(comment_desc="Test Comment", post=cls.post, com_user=cls.user)
-		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment=cls.comment.id)
+		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment_id=cls.comment.id)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
@@ -1014,7 +1022,7 @@ class DeleteCommentPostTest(TestCase):
 		cls.post = PostModel.objects.create(post_title="Test Post", post_user=cls.user, post_description="This post is created for testing purpose.",
 			post_content="images/yellowcar.webp")
 		cls.comment = PostComments.objects.create(comment_desc="Test Comment", post=cls.post, com_user=cls.user)
-		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment=cls.comment.id)
+		cls.reply = PostComments.objects.create(comment_desc="Test Reply", post=cls.post, com_user=cls.user, com_reply=cls.user, reply_on_comment_id=cls.comment.id)
 		cls.credentials = {
 			'username': 'shah@gmail.com',
 			'password': '@@123456'
